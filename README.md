@@ -1,1 +1,3 @@
 # 6.1920_final_project
+For our final project we would like to explore working with an FPGA board. In the first week of the development one of us would like to connect the cache we previously developed to the processor implementation and check for correctness. The other would start on the branch predictor code, initially developing a BTB branch predictor.
+Then can we move on to parallelizing by adding SMT functionality to our processor. Theoretically we would like to start our SMT phase part way through the second week of the project. We’d finish in the third week of development by putting it on a large scale FPGA.  Depending on the amount of time we have left we would like to increase the complexity of the branch predictor and put the design on a smaller FPGA board.
