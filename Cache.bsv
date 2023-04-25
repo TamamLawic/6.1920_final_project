@@ -57,61 +57,70 @@ module mkCache(Cache);
     rule clearLockL1;
         lockL1[1] <= False;
     endrule
-// EVERYTHING ABOVE THIS LINE HAS BEEN EDITED TO WORK WITH 16 WORD LINES
     rule processStoreBuf if (mshr == Ready && !lockL1[1]);
         let nextStore = stBuf.first();
         stBuf.deq();
+        missReq <= nextStore;
         let idx = indexOf(nextStore.addr);
-        if (tagOf(nextStore.addr) == tags[idx] && valids[idx]) begin // hit
+
+        if (tagOf(nextStore.addr) == tags[idx] && valids[idx]) begin 
             dirtys[idx] <= True;
-            dataBRAM.portA.request.put(BRAMRequest{write: True,
-                                responseOnWrite: False,
-                                address: idx,
-                                datain: nextStore.data});
+            mshr <= StartHit;
         end else begin // miss
-        missReq <= MainMemReq{write: 1, addr: nextStore.addr, data : nextStore.data};
-        mshr <= StartMiss;
+            mshr <= StartMiss;
+        end
+        // will request to read a the corresponding cache line in both cases
         dataBRAM.portA.request.put(BRAMRequest{write: False,
                                 responseOnWrite: False,
                                 address: idx,
                                 datain: ?});
-        end
-
     endrule
 
     rule startHit if (mshr == StartHit);
-        let data <- dataBRAM.portA.response.get();
-        hitQ.enq(data);
+        MainMemResp line <- dataBRAM.portA.response.get();
+        let idx = indexOf(missReq.addr);
+        let offset = ofssetOf(missReq.addr);
+        if (missReq.write == 1) begin // part of store buffer processing routine
+            MainMemResp newLine = putWord(missReq.data, offset, line);
+            dataBRAM.portA.request.put(BRAMRequest{write: True,
+                                responseOnWrite: False,
+                                address: idx,
+                                datain: newLine});
+            dirtys[idx] <= True; // redundant with processStoreBuf but didn't know which to keep
+        end else begin // Read hits
+            hitQ.enq(getWord(offset, line));
+        end
         mshr <= Ready;
     endrule
 
     rule startMiss if (mshr == StartMiss); // request dataBRAM @ missReq idx before transitoning into here
-        let data <- dataBRAM.portA.response.get();
+        let residentLine <- dataBRAM.portA.response.get();
         let idx = indexOf(missReq.addr);
-        if(valids[idx] && dirtys[idx]) begin
-            toMemQ.enq(MainMemReq {write: 1, addr: {tags[idx], idx}, data: data});
+        if(valids[idx] && dirtys[idx]) begin // main mem writeback
+            toMemQ.enq(MainMemReq {write: 1, addr: {tags[idx], idx}, data: residentLine});
         end 
         mshr <= SendFillReq;
     endrule
 
     rule sendFillReq if (mshr == SendFillReq);
         let idx = indexOf(missReq.addr);
-        toMemQ.enq(MainMemReq {write: 0, addr: missReq.addr, data: ?});
+        toMemQ.enq(MainMemReq {write: 0, addr: truncateLSB(missReq.addr), data: ?}); // truncateLSB(WordAddr) for LineAddr corresp to WordAddr.
         mshr <= WaitFillResp;
     endrule
 
     rule waitFillResp if (mshr == WaitFillResp);
-        let newLine = fromMemQ.first();
+        MainMemResp newLine = fromMemQ.first();
         let idx = indexOf(missReq.addr);
+        let offset = offsetOf(missReq.addr);
 
         tags[idx] <= tagOf(missReq.addr);
         valids[idx] <= True;
         if (missReq.write == 1) begin // write (store)
-            newLine = missReq.data; // I get that here we just overwrite, in other cases we would just change one word in the line before storing.
+            newLine = putWord(missReq.data, offset, newLine); // just change one word in the new line before storing.
             dirtys[idx] <= True;
         end else begin // load
             dirtys[idx] <= False;
-            hitQ.enq(newLine);      // here we would only take one word if we had many words per line
+            hitQ.enq(newLine);      // send proc the requested word from newLine 
         end
         fromMemQ.deq();
         mshr <= Ready;
@@ -126,23 +135,26 @@ module mkCache(Cache);
         lockL1[0] <= True;
         let idx = indexOf(e.addr);
         Bool stBufHit = False;
+
+        // save current request in case multi-cycle handling is needed
+        missReq <= e;
+
         if (e.write == 0) begin // read
 
             if (stBuf.notEmpty()) begin
-                stBufHit = stBuf.first().addr == e.addr;
+                stBufHit = stBuf.first().addr == e.addr; 
             end
 
-            if (stBufHit) begin  // stbuffer hit
+            if (stBufHit) begin         // stbuffer hit
                 hitQ.enq(stBuf.first().data);
-                // stay in ready state, ready for next req next cycle
+                // instant return; stay ready.
             end else if(tagOf(e.addr) == tags[idx] && valids[idx]) begin // cache hit
+                mshr <= StartHit;
                 dataBRAM.portA.request.put(BRAMRequest{write: False,
                                 responseOnWrite: False,
                                 address: idx,
                                 datain: ?});
-                mshr <= StartHit;
             end else begin // miss 
-                missReq <= e;
                 mshr <= StartMiss;
                 dataBRAM.portA.request.put(BRAMRequest{write: False,
                             responseOnWrite: False,
@@ -171,3 +183,5 @@ module mkCache(Cache);
     endmethod
 
 endmodule
+
+// EVERYTHING ABOVE THIS LINE HAS BEEN EDITED TO WORK WITH 16 WORD LINES
