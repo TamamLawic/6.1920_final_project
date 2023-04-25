@@ -6,17 +6,32 @@ import MemTypes::*;
 import Vector::*;
 import Ehr::*;
 
+function Word getWord(Offset offset, MainMemResp line);
+    return line[32*(offset+1)-1 : 32*offset];
+endfunction
+
+function line putWord(Word word, Offset offset, MainMemResp line);
+    MainMemResp mask = ~((0xffffffff) << (offset * 16));
+    MainMemResp wordInLine = word << (offset * 16);
+    return (line & mask) | wordInLine; //i love men
+endfunction
+
+function WordAddr makeAddr(CacheTag tag, CacheIndex, index, Offset offset);
+    return {tag, index, offset, 2'b00};
+endfunction
+
+
 interface Cache;
-    method Action putFromProc(MainMemReq e);
-    method ActionValue#(MainMemResp) getToProc();
+    method Action putFromProc(CacheReq e);
+    method ActionValue#(Word) getToProc();
     method ActionValue#(MainMemReq) getToMem();
     method Action putFromMem(MainMemResp e);
 endinterface
 
 module mkCache(Cache);
-    // TODO Write a Cache
-    // DEBUG PRINTS
+    // Debug print flag
     Bool debug = False;
+
     BRAM_Configure cfg = defaultValue;
     BRAM1Port#(Bit#(7), MainMemResp) dataBRAM <- mkBRAM1Server(cfg);
     Vector#(128, Reg#(CacheTag)) tags <- replicateM(mkReg(0));
@@ -28,18 +43,21 @@ module mkCache(Cache);
 
     FIFO#(MainMemReq) toMemQ <- mkFIFO;
     FIFO#(MainMemResp) fromMemQ <- mkFIFO;
-    FIFO#(MainMemResp) toProc <- mkFIFO;
-    FIFO#(MainMemResp) hitQ <- mkFIFO;
+    FIFO#(Word) toProc <- mkFIFO;
+    FIFO#(Word) hitQ <- mkFIFO;
     FIFOF#(MainMemReq) stBuf <- mkFIFOF1;
-        // make lockL1 with ehr to schedule putFromProc before processStoreBuffer
+    // make lockL1 with ehr to schedule putFromProc before processStoreBuffer
     Ehr#(2,Bool) lockL1 <- mkEhr(False);
 
-    function CacheIndex indexOf(LineAddr addr) = truncate(addr);
-    function CacheTag tagOf(LineAddr addr) = truncateLSB(addr);
+    // address breakout functions
+    function Offset offsetOf(LineAddr addr) = addr[5:2];
+    function CacheIndex indexOf(LineAddr addr) = addr[12:6];
+    function CacheTag tagOf(LineAddr addr) = addr[31:13]);
     
     rule clearLockL1;
         lockL1[1] <= False;
     endrule
+// EVERYTHING ABOVE THIS LINE HAS BEEN EDITED TO WORK WITH 16 WORD LINES
     rule processStoreBuf if (mshr == Ready && !lockL1[1]);
         let nextStore = stBuf.first();
         stBuf.deq();
@@ -103,7 +121,7 @@ module mkCache(Cache);
                                                 datain: newLine});
     endrule
 
-    method Action putFromProc(MainMemReq e) if(mshr == Ready);
+    method Action putFromProc(CacheReq e) if(mshr == Ready);
         if(debug)begin $display("REQUEST\nread:%d\naddr: %h\ndata:%h\n", e.write, e.addr, e.data); end
         lockL1[0] <= True;
         let idx = indexOf(e.addr);
@@ -132,12 +150,13 @@ module mkCache(Cache);
                             datain: ?});
             end 
         end else begin // write
+            // TODO: see if we can figure out how to write single words directly from our
             stBuf.enq(e); //enq in store buffer
         end  
         
     endmethod
 
-    method ActionValue#(MainMemResp) getToProc();
+    method ActionValue#(Word) getToProc();
         hitQ.deq();
         return hitQ.first();
     endmethod
