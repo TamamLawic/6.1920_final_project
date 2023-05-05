@@ -1,6 +1,6 @@
-typedef Bit#(32) ByteAddr;
+typedef Bit#(32) WordAddr;
 typedef Bit#(26) LineAddr;
-typedef struct { Bit#(1) write; ByteAddr addr; Word data; } CacheReq deriving (Eq, FShow, Bits, Bounded); 
+typedef struct { Bit#(1) write; WordAddr addr; Word data; } CacheReq deriving (Eq, FShow, Bits, Bounded); 
 typedef struct { Bit#(1) write; LineAddr addr; Bit#(512) data; } MainMemReq deriving (Eq, FShow, Bits, Bounded);
 typedef Bit#(512) MainMemResp;
 typedef Bit#(4) Offset;

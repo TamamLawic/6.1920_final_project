@@ -7,16 +7,17 @@ import Vector::*;
 import Ehr::*;
 
 function Word getWord(Offset offset, MainMemResp line);
-    return line[32*(offset+1)-1 : 32*offset];
+    Bit#(9) offsetExtended = zeroExtend(offset);
+    return line[(32 * (offsetExtended + 1))-1 : 32 * offsetExtended];
 endfunction
 
-function line putWord(Word word, Offset offset, MainMemResp line);
-    MainMemResp mask = ~((0xffffffff) << (offset * 16));
-    MainMemResp wordInLine = word << (offset * 16);
+function MainMemResp putWord(Word word, Offset offset, MainMemResp line);
+    MainMemResp mask = ~(zeroExtend((32'hffffffff)) << ({5'h00, offset} * 32));
+    MainMemResp wordInLine =  zeroExtend(word) << ({5'h00, offset} * 32);
     return (line & mask) | wordInLine; //i love men
 endfunction
 
-function WordAddr makeAddr(CacheTag tag, CacheIndex, index, Offset offset);
+function WordAddr makeAddr(CacheTag tag, CacheIndex index, Offset offset);
     return {tag, index, offset, 2'b00};
 endfunction
 
@@ -28,6 +29,7 @@ interface Cache;
     method Action putFromMem(MainMemResp e);
 endinterface
 
+(* synthesize *)
 module mkCache(Cache);
     // Debug print flag
     Bool debug = False;
@@ -39,20 +41,20 @@ module mkCache(Cache);
     Vector#(128, Reg#(Bool)) dirtys <- replicateM(mkReg(False));
 
     Reg#(ReqStatus) mshr <- mkReg(Ready);
-    Reg#(MainMemReq) missReq <- mkRegU;
+    Reg#(CacheReq) missReq <- mkRegU;
 
     FIFO#(MainMemReq) toMemQ <- mkFIFO;
     FIFO#(MainMemResp) fromMemQ <- mkFIFO;
     FIFO#(Word) toProc <- mkFIFO;
     FIFO#(Word) hitQ <- mkFIFO;
-    FIFOF#(MainMemReq) stBuf <- mkFIFOF1;
+    FIFOF#(CacheReq) stBuf <- mkFIFOF1;
     // make lockL1 with ehr to schedule putFromProc before processStoreBuffer
     Ehr#(2,Bool) lockL1 <- mkEhr(False);
 
     // address breakout functions
-    function Offset offsetOf(LineAddr addr) = addr[5:2];
-    function CacheIndex indexOf(LineAddr addr) = addr[12:6];
-    function CacheTag tagOf(LineAddr addr) = addr[31:13]);
+    function Offset offsetOf(WordAddr addr) = addr[5:2];
+    function CacheIndex indexOf(WordAddr addr) = addr[12:6];
+    function CacheTag tagOf(WordAddr addr) = addr[31:13];
     
     rule clearLockL1;
         lockL1[1] <= False;
@@ -79,7 +81,7 @@ module mkCache(Cache);
     rule startHit if (mshr == StartHit);
         MainMemResp line <- dataBRAM.portA.response.get();
         let idx = indexOf(missReq.addr);
-        let offset = ofssetOf(missReq.addr);
+        let offset = offsetOf(missReq.addr);
         if (missReq.write == 1) begin // part of store buffer processing routine
             MainMemResp newLine = putWord(missReq.data, offset, line);
             dataBRAM.portA.request.put(BRAMRequest{write: True,
@@ -120,7 +122,7 @@ module mkCache(Cache);
             dirtys[idx] <= True;
         end else begin // load
             dirtys[idx] <= False;
-            hitQ.enq(newLine);      // send proc the requested word from newLine 
+            hitQ.enq(getWord(offset, newLine));      // send proc the requested word from newLine 
         end
         fromMemQ.deq();
         mshr <= Ready;
@@ -135,19 +137,20 @@ module mkCache(Cache);
         lockL1[0] <= True;
         let idx = indexOf(e.addr);
         Bool stBufHit = False;
-
+        CacheReq reqFromBuf = unpack(0);
         // save current request in case multi-cycle handling is needed
         missReq <= e;
 
         if (e.write == 0) begin // read
 
             if (stBuf.notEmpty()) begin
+                reqFromBuf = stBuf.first();
                 stBufHit = stBuf.first().addr == e.addr; 
             end
 
             if (stBufHit) begin         // stbuffer hit
-                hitQ.enq(stBuf.first().data);
-                // instant return; stay ready.
+                hitQ.enq(reqFromBuf.data);
+                // instant return; mshr will stay ready.
             end else if(tagOf(e.addr) == tags[idx] && valids[idx]) begin // cache hit
                 mshr <= StartHit;
                 dataBRAM.portA.request.put(BRAMRequest{write: False,
@@ -183,5 +186,3 @@ module mkCache(Cache);
     endmethod
 
 endmodule
-
-// EVERYTHING ABOVE THIS LINE HAS BEEN EDITED TO WORK WITH 16 WORD LINES
