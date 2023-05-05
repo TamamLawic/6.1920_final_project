@@ -20,42 +20,57 @@ interface RVIfc;
 endinterface
 
 typedef struct { Bool isUnsigned; Bit#(2) size; Bit#(2) offset; Bool mmio; } MemBusiness deriving (Eq, FShow, Bits);
-typedef Bit#(512) TableResp;
+typedef Bit#(32) TableResp;
 typedef Bit#(7) BtbIndex;
-typedef Bit#(19) BtbTag;
-typedef Bit#(26) LineAddr;
+typedef Bit#(25) BtbTag;
+typedef Bit#(32) Addr;
 
 interface AddrPred;
-    method Bit#(32) nap(Bit#(32) pc);
-    method Action update(addr pc, addr nextPC,Bool taken);
+    method Addr nap(Addr pc);
+    method Action update(Addr pc, Addr nextPC, Bool taken);
 endinterface
 
 module mkPredictor(AddrPred);
   // regs vectors brams
-    BRAM_Configure cfg = defaultValue;
-    BRAM1Port#(Bit#(7), TableResp) dataBRAM <- mkBRAM1Server(cfg);
+    //BRAM_Configure cfg = defaultValue;
+    //BRAM1Port#(Bit#(7), TableResp) dataBRAM <- mkBRAM1Server(cfg);
+
     Vector#(128, Reg#(BtbTag)) tags <- replicateM(mkReg(0));
+    Vector#(128, Reg#(Addr)) predPC <- replicateM(mkReg(0));
+    Vector#(128, Reg#(Bool)) validArray <- replicateM(mkReg(False));
 
     //functions for addressing
-    function BtbIndex idxOf (LineAddr addr) = truncate (addr);
-    function BtbTag tagOf (LineAddr addr) = truncateLSB (addr);
+    function BtbIndex idxOf (Addr pc) = truncate (pc);
+    function BtbTag tagOf (Addr pc) = truncateLSB (pc);
 
-    method Bit#(32) nap(Bit#(32) current_pc);
+    method Addr nap(Addr current_pc);
         //start request
-        // dataBRAM.portA.request.put(BRAMRequest{write: False,
-        //                             responseOnWrite: False,
-        //                             address: idx,
-        //                             datain: ?});
-        return current_pc + 4;
+        let idx = idxOf(current_pc);
+        let predictedAddr = current_pc + 4;
+        let currentTag = tagOf(current_pc);
+        
+        if (validArray[idx] && tags[idx] == currentTag) begin
+            predictedAddr = predPC[idx];
+        end
+        return predictedAddr;
     endmethod
 
-    method Action update(addr start_pc, addr nextPC, Bool taken);
+    method Action update(Addr start_pc, Addr nextPC, Bool taken);
         //extract index and tag from pc;
+        let idx = idxOf(start_pc);
+        let tag = tagOf(start_pc);
         //if (branch taken) then update BTB with the new prediction; 
-        // dataBRAM.portA.request.put(BRAMRequest{write: False,
-        //                             responseOnWrite: False,
-        //                             address: idx,
-        //                             datain: ?});
+        if (taken) begin
+            if (!validArray[idx]) begin
+                validArray[idx] <= True;
+            end
+            predPC[idx] <= nextPC;
+            tags[idx] <= tag;
+        end
+        //if the branch is not taken, and the entry is in the table, remove it
+        else if(validArray[idx] && tags[idx] == tag) begin
+            validArray[idx] <= False;
+        end
         //mark the entry pc as branch taken;
         //else mark the entry pc as branch not taken
     endmethod
@@ -138,7 +153,7 @@ module mkpipelined(RVIfc);
 	FIFO#(KonataId) retired <- mkFIFO;
 	FIFO#(KonataId) squashed <- mkFIFO;
 
-    Bool debug = True;
+    Bool debug = False;
     Reg#(Bool) starting <- mkReg(True);
 	rule do_tic_logging;
         if (starting) begin
@@ -164,7 +179,7 @@ module mkpipelined(RVIfc);
 			addr : pc[1],
 			data : 0};
         toImem.enq(req);
-        f2d.enq(F2D{pc : pc[1], ppc : pc[1] + 4, epoch: epoch[1], k_id: iid});
+        f2d.enq(F2D{pc : pc[1], ppc : btb.nap(pc[1]), epoch: epoch[1], k_id: iid});
         // This will likely end with something like:
         // f2d.enq(F2D{ ..... k_id: iid});
         // iid is the unique identifier used by konata, that we will pass around everywhere for each instruction
@@ -272,7 +287,8 @@ module mkpipelined(RVIfc);
             if(nextPc != from_fetch.ppc) begin
                 pc[0] <= nextPc;
                 epoch[0] <= ~epoch[0]; 
-                //for btb training, btb.update(pcE, nextPC, eInst.brTaken);
+                //for btb training
+                btb.update(from_fetch.pc, nextPc, controlResult.taken);
                 if(debug) $display("Redirect %x", nextPc);
             end
  
