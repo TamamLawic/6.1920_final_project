@@ -1,6 +1,7 @@
 import FIFO::*;
 import SpecialFIFOs::*;
 import RegFile::*;
+import BRAM::*;
 import RVUtil::*;
 import Vector::*;
 import KonataHelper::*;
@@ -17,7 +18,48 @@ interface RVIfc;
     method ActionValue#(Mem) getMMIOReq();
     method Action getMMIOResp(Mem a);
 endinterface
+
 typedef struct { Bool isUnsigned; Bit#(2) size; Bit#(2) offset; Bool mmio; } MemBusiness deriving (Eq, FShow, Bits);
+typedef Bit#(512) TableResp;
+typedef Bit#(7) BtbIndex;
+typedef Bit#(19) BtbTag;
+typedef Bit#(26) LineAddr;
+
+interface AddrPred;
+    method Bit#(32) nap(Bit#(32) pc);
+    method Action update(addr pc, addr nextPC,Bool taken);
+endinterface
+
+module mkPredictor(AddrPred);
+  // regs vectors brams
+    BRAM_Configure cfg = defaultValue;
+    BRAM1Port#(Bit#(7), TableResp) dataBRAM <- mkBRAM1Server(cfg);
+    Vector#(128, Reg#(BtbTag)) tags <- replicateM(mkReg(0));
+
+    //functions for addressing
+    function BtbIndex idxOf (LineAddr addr) = truncate (addr);
+    function BtbTag tagOf (LineAddr addr) = truncateLSB (addr);
+
+    method Bit#(32) nap(Bit#(32) current_pc);
+        //start request
+        // dataBRAM.portA.request.put(BRAMRequest{write: False,
+        //                             responseOnWrite: False,
+        //                             address: idx,
+        //                             datain: ?});
+        return current_pc + 4;
+    endmethod
+
+    method Action update(addr start_pc, addr nextPC, Bool taken);
+        //extract index and tag from pc;
+        //if (branch taken) then update BTB with the new prediction; 
+        // dataBRAM.portA.request.put(BRAMRequest{write: False,
+        //                             responseOnWrite: False,
+        //                             address: idx,
+        //                             datain: ?});
+        //mark the entry pc as branch taken;
+        //else mark the entry pc as branch not taken
+    endmethod
+endmodule
 
 typedef enum {
 	Fetch, Decode, Execute, Writeback
@@ -84,6 +126,9 @@ module mkpipelined(RVIfc);
     //make the scoreboard
     Vector#(32, Ehr#(3, Bit#(2))) scoreboard <- replicateM(mkEhr(0));
 
+    //make structure for storing BTB table
+    AddrPred btb <- mkPredictor;
+
 	// Code to support Konata visualization
     String dumpFile = "pipelined.log" ;
     let lfh <- mkReg(InvalidFile);
@@ -111,7 +156,8 @@ module mkpipelined(RVIfc);
         // You should put the pc that you fetch in pc_fetched
         // Below is the code to support Konata's visualization
 		let iid <- fetch1Konata(lfh, fresh_id, 0);
-        pc[1] <= pc[1] + 4;
+        // CHANGE THIS LINE TO USE BTB!!
+        pc[1] <= btb.nap(pc[1]);
         labelKonataLeft(lfh, iid, $format("PC %x",pc[1]));
         // TODO implement fetch
         let req = Mem {byte_en : 0,
@@ -162,8 +208,6 @@ module mkpipelined(RVIfc);
     endrule
 
     rule execute if (!starting);
-        // TODO
-
         // Similarly, to register an execute event for an instruction:
     	//	executeKonata(lfh, k_id);
     	// where k_id is the unique konata identifier that has been passed around that came from the fetch stage
@@ -224,9 +268,11 @@ module mkpipelined(RVIfc);
             let controlResult = execControl32(from_fetch.dinst.inst, from_fetch.rv1, from_fetch.rv2, imm, from_fetch.pc);
             let nextPc = controlResult.nextPC;
 
+            //if the predicted next PC is not the actual PC, update epoch etc.
             if(nextPc != from_fetch.ppc) begin
                 pc[0] <= nextPc;
                 epoch[0] <= ~epoch[0]; 
+                //for btb training, btb.update(pcE, nextPC, eInst.brTaken);
                 if(debug) $display("Redirect %x", nextPc);
             end
  
