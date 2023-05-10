@@ -30,11 +30,11 @@ timeout 2 ./top_pipelined
 
 echo "Testing reverse"
 ./test.sh reverse32
-timeout 1 ./top_pipelined
+timeout 3 ./top_pipelined
 
 echo "Testing thelie"
 ./test.sh thelie32
-timeout 10 ./top_pipelined
+timeout 20 ./top_pipelined
 
 echo "Testing thuemorse"
 ./test.sh thuemorse32

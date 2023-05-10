@@ -78,6 +78,8 @@ module mktop_pipelined(Empty);
             // Exiting Simulation
                 if (req.data == 0) begin
                         $fdisplay(stderr, "  [0;32mPASS[0m");
+                        $fdisplay(stderr, "Cycle count: ");
+                        $fdisplay(stderr, cycle_count);
                 end
                 else
                     begin

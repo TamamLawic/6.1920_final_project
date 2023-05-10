@@ -34,10 +34,9 @@ module mkPredictor(AddrPred);
   // regs vectors brams
     //BRAM_Configure cfg = defaultValue;
     //BRAM1Port#(Bit#(7), TableResp) dataBRAM <- mkBRAM1Server(cfg);
-
-    Vector#(128, Reg#(BtbTag)) tags <- replicateM(mkReg(0));
-    Vector#(128, Reg#(Addr)) predPC <- replicateM(mkReg(0));
-    Vector#(128, Reg#(Bool)) validArray <- replicateM(mkReg(False));
+    Vector#(128, Ehr#(2, BtbTag)) tags <- replicateM(mkEhr(0));
+    Vector#(128, Ehr#(2, Addr)) predPC <- replicateM(mkEhr(0));
+    Vector#(128, Ehr#(2, Bool)) validArray <- replicateM(mkEhr(False));
 
     //functions for addressing
     function BtbIndex idxOf (Addr pc) = truncate (pc);
@@ -49,8 +48,8 @@ module mkPredictor(AddrPred);
         let predictedAddr = current_pc + 4;
         let currentTag = tagOf(current_pc);
         
-        if (validArray[idx] && tags[idx] == currentTag) begin
-            predictedAddr = predPC[idx];
+        if (validArray[idx][1] && tags[idx][1] == currentTag) begin
+            predictedAddr = predPC[idx][1];
         end
         return predictedAddr;
     endmethod
@@ -61,15 +60,15 @@ module mkPredictor(AddrPred);
         let tag = tagOf(start_pc);
         //if (branch taken) then update BTB with the new prediction; 
         if (taken) begin
-            if (!validArray[idx]) begin
-                validArray[idx] <= True;
+            if (!validArray[idx][0]) begin
+                validArray[idx][0] <= True;
             end
-            predPC[idx] <= nextPC;
-            tags[idx] <= tag;
+            predPC[idx][0] <= nextPC;
+            tags[idx][0] <= tag;
         end
         //if the branch is not taken, and the entry is in the table, remove it
-        else if(validArray[idx] && tags[idx] == tag) begin
-            validArray[idx] <= False;
+        else if(validArray[idx][0] && tags[idx][0] == tag) begin
+            validArray[idx][0] <= False;
         end
         //mark the entry pc as branch taken;
         //else mark the entry pc as branch not taken
@@ -131,9 +130,12 @@ module mkpipelined(RVIfc);
     //start at the top of the code
     Vector#(32,  Ehr#(3, Bit#(32))) rf <- replicateM(mkEhr(0));
     // Make queues for between each state
-    FIFO#(F2D) f2d <- mkFIFO();
-    FIFO#(D2E) d2e <- mkFIFO();
-    FIFO#(E2W) e2w <- mkFIFO();
+    FIFO#(F2D) f2d_r <- mkFIFO();
+    FIFO#(D2E) d2e_r <- mkFIFO();
+    FIFO#(E2W) e2w_r <- mkFIFO();
+    FIFO#(F2D) f2d_b <- mkFIFO();
+    FIFO#(D2E) d2e_b <- mkFIFO();
+    FIFO#(E2W) e2w_b <- mkFIFO();
 
     Ehr#(2, Bit#(1)) epoch <- mkEhr(0);
     Ehr#(2, Bit#(32)) pc <- mkEhr(32'h0000000);
@@ -179,7 +181,7 @@ module mkpipelined(RVIfc);
 			addr : pc[1],
 			data : 0};
         toImem.enq(req);
-        f2d.enq(F2D{pc : pc[1], ppc : btb.nap(pc[1]), epoch: epoch[1], k_id: iid});
+        f2d_r.enq(F2D{pc : pc[1], ppc : btb.nap(pc[1]), epoch: epoch[1], k_id: iid});
         // This will likely end with something like:
         // f2d.enq(F2D{ ..... k_id: iid});
         // iid is the unique identifier used by konata, that we will pass around everywhere for each instruction
@@ -187,7 +189,7 @@ module mkpipelined(RVIfc);
 
     rule decode if (!starting);
         // TODO
-        let from_fetch = f2d.first();
+        let from_fetch = f2d_r.first();
         let resp = fromImem.first();
         let instr = resp.data;
         let decodedInst = decodeInst(instr);
@@ -211,8 +213,8 @@ module mkpipelined(RVIfc);
                 end
                 if(debug) $display("Use Register %x", rd_idx);
             end
-            d2e.enq(D2E{dinst: decodedInst, pc: from_fetch.pc, ppc: from_fetch.ppc, epoch: from_fetch.epoch, rv1: rs1, rv2: rs2, k_id: from_fetch.k_id});
-            f2d.deq();
+            d2e_r.enq(D2E{dinst: decodedInst, pc: from_fetch.pc, ppc: from_fetch.ppc, epoch: from_fetch.epoch, rv1: rs1, rv2: rs2, k_id: from_fetch.k_id});
+            f2d_r.deq();
             fromImem.deq();
         end
         //state <= Execute;
@@ -235,7 +237,7 @@ module mkpipelined(RVIfc);
         // squashed.enq(current_inst.k_id);
 
         // This will allow Konata to display those instructions in grey
-        let from_fetch = d2e.first();
+        let from_fetch = d2e_r.first();
         if (debug) $display("[Execute] ", fshow(from_fetch.dinst));
         let current_id = from_fetch.k_id;
 		executeKonata(lfh, current_id);
@@ -293,7 +295,7 @@ module mkpipelined(RVIfc);
             end
  
             let mem_business = MemBusiness { isUnsigned : unpack(isUnsigned), size : size, offset : offset, mmio: mmio};
-            e2w.enq(E2W{mem_business : mem_business, data : data, dinst : from_fetch.dinst, k_id : current_id});
+            e2w_r.enq(E2W{mem_business : mem_business, data : data, dinst : from_fetch.dinst, k_id : current_id});
             labelKonataLeft(lfh,current_id, $format(" ALU output: %x" , data));
         end
         else begin
@@ -306,12 +308,12 @@ module mkpipelined(RVIfc);
             if(debug) $display("Free Execute Register %x", rd_idx);
             if (debug) $display("[Execute scoreboard : ] ", rd_idx, fshow(scoreboard[rd_idx][1]));
         end
-        d2e.deq();
+        d2e_r.deq();
 
     endrule
 
     rule writeback if (!starting);
-        let from_fetched = e2w.first();
+        let from_fetched = e2w_r.first();
         let current_id = from_fetched.k_id;
 		writebackKonata(lfh,current_id);
         retired.enq(current_id);
@@ -351,7 +353,7 @@ module mkpipelined(RVIfc);
             end
 		end
         if(debug) $display("Free Writeback Register %x", rd_idx);
-        e2w.deq();
+        e2w_r.deq();
     endrule
 
 
