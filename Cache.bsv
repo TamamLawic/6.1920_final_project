@@ -35,7 +35,7 @@ module mkCache(Cache);
     Bool debug = False;
 
     BRAM_Configure cfg = defaultValue;
-    BRAM1Port#(Bit#(7), MainMemResp) dataBRAM <- mkBRAM1Server(cfg);
+    BRAM1PortBE#(Bit#(7), MainMemResp, 64) dataBRAM <- mkBRAM1ServerBE(cfg);
     Vector#(128, Reg#(CacheTag)) tags <- replicateM(mkReg(0));
     Vector#(128, Reg#(Bool)) valids <- replicateM(mkReg(False));
     Vector#(128, Reg#(Bool)) dirtys <- replicateM(mkReg(False));
@@ -72,7 +72,7 @@ module mkCache(Cache);
             mshr <= StartMiss;
         end
         // will request to read a the corresponding cache line in both cases
-        dataBRAM.portA.request.put(BRAMRequest{write: False,
+        dataBRAM.portA.request.put(BRAMRequestBE{writeen: 0,
                                 responseOnWrite: False,
                                 address: idx,
                                 datain: ?});
@@ -82,9 +82,11 @@ module mkCache(Cache);
         MainMemResp line <- dataBRAM.portA.response.get();
         let idx = indexOf(missReq.addr);
         let offset = offsetOf(missReq.addr);
+        Bit#(6) beOffset = zeroExtend(offset) << 2; // shift because there's 4 bytes in a word
+        LineWriteEn lineWriteEn = missReq.writeen << beOffset; 
         if (missReq.write == 1) begin // part of store buffer processing routine
             MainMemResp newLine = putWord(missReq.data, offset, line);
-            dataBRAM.portA.request.put(BRAMRequest{write: True,
+            dataBRAM.portA.request.put(BRAMRequestBE{writeen: lineWriteEn,
                                 responseOnWrite: False,
                                 address: idx,
                                 datain: newLine});
@@ -106,7 +108,7 @@ module mkCache(Cache);
 
     rule sendFillReq if (mshr == SendFillReq);
         let idx = indexOf(missReq.addr);
-        toMemQ.enq(MainMemReq {write: 0, addr: truncateLSB(missReq.addr), data: ?}); // truncateLSB(WordAddr) for LineAddr corresp to WordAddr.
+        toMemQ.enq(MainMemReq {write: 0, addr: truncateLSB(missReq.addr), data: ?}); // truncateLSB(WordAddr) to find LineAddr corresp to WordAddr.
         mshr <= WaitFillResp;
     endrule
 
@@ -114,6 +116,8 @@ module mkCache(Cache);
         MainMemResp newLine = fromMemQ.first();
         let idx = indexOf(missReq.addr);
         let offset = offsetOf(missReq.addr);
+        Bit#(6) beOffset = zeroExtend(offset) << 2; // 4 bytes in a word
+        LineWriteEn lineWriteEn = missReq.writeen << beOffset; 
 
         tags[idx] <= tagOf(missReq.addr);
         valids[idx] <= True;
@@ -126,7 +130,8 @@ module mkCache(Cache);
         end
         fromMemQ.deq();
         mshr <= Ready;
-        dataBRAM.portA.request.put(BRAMRequest{  write: True,
+        dataBRAM.portA.request.put(BRAMRequestBE{  
+                                                writeen: LineWriteEn,
                                                 responseOnWrite: False,
                                                 address: idx,
                                                 datain: newLine});
@@ -153,13 +158,13 @@ module mkCache(Cache);
                 // instant return; mshr will stay ready.
             end else if(tagOf(e.addr) == tags[idx] && valids[idx]) begin // cache hit
                 mshr <= StartHit;
-                dataBRAM.portA.request.put(BRAMRequest{write: False,
+                dataBRAM.portA.request.put(BRAMRequestBE{writeen: 0,
                                 responseOnWrite: False,
                                 address: idx,
                                 datain: ?});
             end else begin // miss 
                 mshr <= StartMiss;
-                dataBRAM.portA.request.put(BRAMRequest{write: False,
+                dataBRAM.portA.request.put(BRAMRequestBE{writeen: 0,
                             responseOnWrite: False,
                             address: idx,
                             datain: ?});
