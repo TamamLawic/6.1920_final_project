@@ -9,8 +9,8 @@ typedef Bit#(32) Word;
 module mktop_pipelined(Empty);
     // Instantiate the dual ported memory
     BRAM_Configure cfg = defaultValue();
-    cfg.loadFormat = tagged Hex "mem.vmh";
-    BRAM2Port#(Bit#(512), Line) bram <- mkBRAM2Server(cfg);
+    cfg.loadFormat = tagged Hex "memlines.vmh";
+    BRAM2Port#(Bit#(26), Line) bram <- mkBRAM2Server(cfg);
 
     RVIfc rv_core <- mkpipelined;
     Reg#(Mem) ireq <- mkRegU;
@@ -43,16 +43,16 @@ module mktop_pipelined(Empty);
     endrule
     
     rule iCacheToMem;
-            MainMemReq req = iCache.getToMem();
+            MainMemReq req <- iCache.getToMem();
             bram.portB.request.put(BRAMRequest{
-                    write: mem.write == 1,
+                    write: req.write == 1,
                     responseOnWrite: False,
                     address: req.addr,
                     datain: req.data}); 
     endrule
 
     rule memToICache;
-        MainMemResp memResp = bram.portB.response.get();
+        MainMemResp memResp <- bram.portB.response.get();
         iCache.putFromMem(memResp);
     endrule
 
@@ -83,16 +83,16 @@ module mktop_pipelined(Empty);
     endrule
 
     rule dCacheToMem;
-            MainMemReq req = dcache.getToMem();
+            MainMemReq req <- dCache.getToMem();
             bram.portA.request.put(BRAMRequest{
-                    write: mem.write == 1,
+                    write: req.write == 1,
                     responseOnWrite: False,
                     address: req.addr,
                     datain: req.data});  
     endrule
 
     rule memToDCache;
-        MainMemResp memResp = bram.portA.response.get();
+        MainMemResp memResp <- bram.portA.response.get();
         dCache.putFromMem(memResp);
     endrule
 

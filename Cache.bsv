@@ -32,7 +32,7 @@ endinterface
 (* synthesize *)
 module mkCache(Cache);
     // Debug print flag
-    Bool debug = False;
+    Bool debug = True;
 
     BRAM_Configure cfg = defaultValue;
     BRAM1PortBE#(Bit#(7), MainMemResp, 64) dataBRAM <- mkBRAM1ServerBE(cfg);
@@ -83,7 +83,7 @@ module mkCache(Cache);
         let idx = indexOf(missReq.addr);
         let offset = offsetOf(missReq.addr);
         Bit#(6) beOffset = zeroExtend(offset) << 2; // shift because there's 4 bytes in a word
-        LineWriteEn lineWriteEn = missReq.writeen << beOffset; 
+        LineWriteEn lineWriteEn = zeroExtend(missReq.writeen) << beOffset; 
         if (missReq.write == 1) begin // part of store buffer processing routine
             MainMemResp newLine = putWord(missReq.data, offset, line);
             dataBRAM.portA.request.put(BRAMRequestBE{writeen: lineWriteEn,
@@ -101,6 +101,7 @@ module mkCache(Cache);
         let residentLine <- dataBRAM.portA.response.get();
         let idx = indexOf(missReq.addr);
         if(valids[idx] && dirtys[idx]) begin // main mem writeback
+            if(debug)begin $display("old (tag=%h) line #%d written back\n", tags[idx], idx); end
             toMemQ.enq(MainMemReq {write: 1, addr: {tags[idx], idx}, data: residentLine});
         end 
         mshr <= SendFillReq;
@@ -109,36 +110,41 @@ module mkCache(Cache);
     rule sendFillReq if (mshr == SendFillReq);
         let idx = indexOf(missReq.addr);
         toMemQ.enq(MainMemReq {write: 0, addr: truncateLSB(missReq.addr), data: ?}); // truncateLSB(WordAddr) to find LineAddr corresp to WordAddr.
+        if(debug)begin $display("line (tag=%h idx=%d) requested\n", tagOf(missReq.addr), indexOf(missReq.addr)); end
         mshr <= WaitFillResp;
     endrule
 
     rule waitFillResp if (mshr == WaitFillResp);
+        if(debug)begin $display("new line recieved\n"); end
         MainMemResp newLine = fromMemQ.first();
         let idx = indexOf(missReq.addr);
         let offset = offsetOf(missReq.addr);
         Bit#(6) beOffset = zeroExtend(offset) << 2; // 4 bytes in a word
-        LineWriteEn lineWriteEn = missReq.writeen << beOffset; 
+        LineWriteEn lineWriteEn = zeroExtend(missReq.writeen) << beOffset; 
 
         tags[idx] <= tagOf(missReq.addr);
         valids[idx] <= True;
         if (missReq.write == 1) begin // write (store)
             newLine = putWord(missReq.data, offset, newLine); // just change one word in the new line before storing.
             dirtys[idx] <= True;
+            if(debug)begin $display("%h subbed in to line with offset %d (for store miss)\n", missReq.data, offset); end
         end else begin // load
             dirtys[idx] <= False;
             hitQ.enq(getWord(offset, newLine));      // send proc the requested word from newLine 
         end
         fromMemQ.deq();
         mshr <= Ready;
+        if(debug)begin $display("new line dump: %h\n", newLine); end
+        if(debug)begin $display("new line stored\n"); end
         dataBRAM.portA.request.put(BRAMRequestBE{  
-                                                writeen: LineWriteEn,
+                                                writeen: 64'hffffffffffffffff,
                                                 responseOnWrite: False,
                                                 address: idx,
                                                 datain: newLine});
     endrule
 
     method Action putFromProc(CacheReq e) if(mshr == Ready);
-        if(debug)begin $display("REQUEST\nread:%d\naddr: %h\ndata:%h\n", e.write, e.addr, e.data); end
+        if(debug)begin $display("\nNEW REQUEST\nwrite:%d\naddr: %h\ndata:%h\n", e.write, e.addr, e.data); end
         lockL1[0] <= True;
         let idx = indexOf(e.addr);
         Bool stBufHit = False;
@@ -155,14 +161,17 @@ module mkCache(Cache);
 
             if (stBufHit) begin         // stbuffer hit
                 hitQ.enq(reqFromBuf.data);
+                if(debug)begin $display("Stbuf read hit\n"); end
                 // instant return; mshr will stay ready.
             end else if(tagOf(e.addr) == tags[idx] && valids[idx]) begin // cache hit
+                if(debug)begin $display("read hit, line: #%d \n", idx); end
                 mshr <= StartHit;
                 dataBRAM.portA.request.put(BRAMRequestBE{writeen: 0,
                                 responseOnWrite: False,
                                 address: idx,
                                 datain: ?});
             end else begin // miss 
+                if(debug)begin $display("Read Miss\n"); end
                 mshr <= StartMiss;
                 dataBRAM.portA.request.put(BRAMRequestBE{writeen: 0,
                             responseOnWrite: False,
@@ -172,6 +181,7 @@ module mkCache(Cache);
         end else begin // write
             // TODO: see if we can figure out how to write single words directly from our
             stBuf.enq(e); //enq in store buffer
+            if(debug)begin $display("Stbuf enqueued\n"); end
         end  
         
     endmethod
