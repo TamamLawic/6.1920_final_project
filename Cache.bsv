@@ -11,9 +11,13 @@ function Word getWord(Offset offset, MainMemResp line);
     return line[(32 * (offsetExtended + 1))-1 : 32 * offsetExtended];
 endfunction
 
-function MainMemResp putWord(Word word, Offset offset, MainMemResp line);
-    MainMemResp mask = ~(zeroExtend((32'hffffffff)) << ({5'h00, offset} * 32));
-    MainMemResp wordInLine =  zeroExtend(word) << ({5'h00, offset} * 32);
+function MainMemResp putWord(Word word, ByteEn writeen, Offset offset, Line line);
+    Word wordMask = 0;
+    for(Integer i = 0; i < 32; i=i+1) begin
+        wordMask[fromInteger(i)] = writeen[fromInteger(i)>>3];
+    end
+    Line wordInLine =  zeroExtend(word & wordMask) << ({5'h00, offset} * 32);
+    Line mask = ~(zeroExtend((wordMask)) << ({5'h00, offset} * 32));
     return (line & mask) | wordInLine; //i love men
 endfunction
 
@@ -32,7 +36,7 @@ endinterface
 (* synthesize *)
 module mkCache(Cache);
     // Debug print flag
-    Bool debug = True;
+    Bool debug = False;
 
     BRAM_Configure cfg = defaultValue;
     BRAM1PortBE#(Bit#(7), MainMemResp, 64) dataBRAM <- mkBRAM1ServerBE(cfg);
@@ -69,6 +73,7 @@ module mkCache(Cache);
             dirtys[idx] <= True;
             mshr <= StartHit;
         end else begin // miss
+            if(debug)begin $display("(stbuf) Write Miss"); end
             mshr <= StartMiss;
         end
         // will request to read a the corresponding cache line in both cases
@@ -85,14 +90,18 @@ module mkCache(Cache);
         Bit#(6) beOffset = zeroExtend(offset) << 2; // shift because there's 4 bytes in a word
         LineWriteEn lineWriteEn = zeroExtend(missReq.writeen) << beOffset; 
         if (missReq.write == 1) begin // part of store buffer processing routine
-            MainMemResp newLine = putWord(missReq.data, offset, line);
+            MainMemResp newLine = putWord(missReq.data, missReq.writeen, offset, line);
+            if(debug)begin $display("Write hit"); 
+                            $display("resident line: \n%h\nnew line: \n%h\n", line, newLine);end
             dataBRAM.portA.request.put(BRAMRequestBE{writeen: lineWriteEn,
                                 responseOnWrite: False,
                                 address: idx,
                                 datain: newLine});
             dirtys[idx] <= True; // redundant with processStoreBuf but didn't know which to keep
         end else begin // Read hits
-            hitQ.enq(getWord(offset, line));
+            let resp = getWord(offset, line);
+            if(debug)begin $display("Read hit, respond: %h", resp); end
+            hitQ.enq(resp);
         end
         mshr <= Ready;
     endrule
@@ -125,16 +134,18 @@ module mkCache(Cache);
         tags[idx] <= tagOf(missReq.addr);
         valids[idx] <= True;
         if (missReq.write == 1) begin // write (store)
-            newLine = putWord(missReq.data, offset, newLine); // just change one word in the new line before storing.
+            newLine = putWord(missReq.data, missReq.writeen, offset, newLine); // just change one word in the new line before storing.
             dirtys[idx] <= True;
-            if(debug)begin $display("%h subbed in to line with offset %d (for store miss)\n", missReq.data, offset); end
-        end else begin // load
+            if(debug)begin $display("masked %h subbed in to line with offset %d (for store miss)\n", missReq.data, offset); end
+        end else begin // read
             dirtys[idx] <= False;
-            hitQ.enq(getWord(offset, newLine));      // send proc the requested word from newLine 
+            let resp = getWord(offset, newLine);
+            if(debug)begin $display("read miss done, respond: %h", resp); end
+            hitQ.enq(resp);      // send proc the requested word from newLine 
         end
         fromMemQ.deq();
         mshr <= Ready;
-        if(debug)begin $display("new line dump: %h\n", newLine); end
+        if(debug)begin $display("new line dump: \n%h\n", newLine); end
         if(debug)begin $display("new line stored\n"); end
         dataBRAM.portA.request.put(BRAMRequestBE{  
                                                 writeen: 64'hffffffffffffffff,
@@ -144,7 +155,7 @@ module mkCache(Cache);
     endrule
 
     method Action putFromProc(CacheReq e) if(mshr == Ready);
-        if(debug)begin $display("\nNEW REQUEST\nwrite:%d\naddr: %h\ndata:%h\n", e.write, e.addr, e.data); end
+        if(debug)begin $display("\nNEW REQUEST\nwrite:%b\naddr: %h\ndata:%h\n", e.writeen, e.addr, e.data); end
         lockL1[0] <= True;
         let idx = indexOf(e.addr);
         Bool stBufHit = False;

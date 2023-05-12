@@ -81,25 +81,41 @@ Predicate: True
 Blocking rules: (none)
  
 Rule: requestI
-Predicate: rv_core.RDY_getIReq && (bram_serverAdapterB_cnt .< 3'd3)
+Predicate: iCache.RDY_putFromProc && rv_core.RDY_getIReq
 Blocking rules: (none)
  
-Rule: responseI
+Rule: iCacheToMem
+Predicate: iCache.RDY_getToMem && (bram_serverAdapterB_cnt .< 3'd3)
+Blocking rules: (none)
+ 
+Rule: memToICache
 Predicate: bram_serverAdapterB_outData_beforeDeq.read &&
 	   (bram_serverAdapterB_outData_ff.i_notEmpty ||
 	    bram_serverAdapterB_outData_enqw.whas) &&
-	   rv_core.RDY_getIResp
+	   iCache.RDY_putFromMem
+Blocking rules: (none)
+ 
+Rule: responseI
+Predicate: iCache.RDY_getToProc && rv_core.RDY_getIResp
 Blocking rules: (none)
  
 Rule: requestD
-Predicate: rv_core.RDY_getDReq && (bram_serverAdapterA_cnt .< 3'd3)
+Predicate: dCache.RDY_putFromProc && rv_core.RDY_getDReq
 Blocking rules: (none)
  
-Rule: responseD
+Rule: dCacheToMem
+Predicate: dCache.RDY_getToMem && (bram_serverAdapterA_cnt .< 3'd3)
+Blocking rules: (none)
+ 
+Rule: memToDCache
 Predicate: bram_serverAdapterA_outData_beforeDeq.read &&
 	   (bram_serverAdapterA_outData_ff.i_notEmpty ||
 	    bram_serverAdapterA_outData_enqw.whas) &&
-	   rv_core.RDY_getDResp
+	   dCache.RDY_putFromMem
+Blocking rules: (none)
+ 
+Rule: responseD
+Predicate: dCache.RDY_getToProc && rv_core.RDY_getDResp
 Blocking rules: (none)
  
 Rule: requestMMIO
@@ -110,23 +126,27 @@ Rule: responseMMIO
 Predicate: rv_core.RDY_getMMIOResp && mmioreq.i_notEmpty
 Blocking rules: (none)
  
-Logical execution order: tic,
-			 requestMMIO,
-			 responseMMIO,
-			 bram_serverAdapterA_overRun,
-			 bram_serverAdapterA_moveToOutFIFO,
+Logical execution order: iCacheToMem,
+			 responseI,
+			 requestI,
+			 dCacheToMem,
 			 responseD,
 			 requestD,
+			 requestMMIO,
+			 tic,
+			 responseMMIO,
 			 bram_serverAdapterA_stageReadResponseAlways,
+			 bram_serverAdapterA_overRun,
+			 bram_serverAdapterA_moveToOutFIFO,
+			 memToDCache,
 			 bram_serverAdapterA_outData_enqueue,
 			 bram_serverAdapterA_outData_dequeue,
 			 bram_serverAdapterA_cnt_finalAdd,
 			 bram_serverAdapterA_s1__dreg_update,
+			 bram_serverAdapterB_stageReadResponseAlways,
 			 bram_serverAdapterB_overRun,
 			 bram_serverAdapterB_moveToOutFIFO,
-			 responseI,
-			 requestI,
-			 bram_serverAdapterB_stageReadResponseAlways,
+			 memToICache,
 			 bram_serverAdapterB_outData_enqueue,
 			 bram_serverAdapterB_outData_dequeue,
 			 bram_serverAdapterB_cnt_finalAdd,

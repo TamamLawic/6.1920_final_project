@@ -320,12 +320,12 @@ module mkpipelined(RVIfc);
         let data = from_fetched.data;
         let dInst = from_fetched.dinst;
         let fields = getInstFields(dInst.inst);
-        if (isMemoryInst(dInst)) begin // (* // write_val *)
+        if (isMemoryInst(dInst)) begin // (* // write_val *) 
             let resp = ?;
 		    if (from_fetched.mem_business.mmio) begin 
                 resp = fromMMIO.first();
 		        fromMMIO.deq();
-		    end else begin 
+		    end else if(dInst.inst[5] == 0) begin // only deq for reads
                 resp = fromDmem.first();
 		        fromDmem.deq();
 		    end
