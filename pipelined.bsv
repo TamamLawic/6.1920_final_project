@@ -31,7 +31,7 @@ interface AddrPred;
 endinterface
 
 module mkPredictor(AddrPred);
-  // regs vectors brams
+    // regs vectors brams
     //BRAM_Configure cfg = defaultValue;
     //BRAM1Port#(Bit#(7), TableResp) dataBRAM <- mkBRAM1Server(cfg);
     Vector#(128, Ehr#(2, BtbTag)) tags <- replicateM(mkEhr(0));
@@ -76,7 +76,7 @@ module mkPredictor(AddrPred);
 endmodule
 
 typedef enum {
-	Fetch, Decode, Execute, Writeback
+    Fetch, Decode, Execute, Writeback
 } StateProc deriving (Eq, FShow, Bits);
 
 function Bool isMMIO(Bit#(32) addr);
@@ -128,7 +128,9 @@ module mkpipelined(RVIfc);
     FIFO#(Mem) fromMMIO <- mkBypassFIFO;
 
     //start at the top of the code
-    Vector#(32,  Ehr#(3, Bit#(32))) rf <- replicateM(mkEhr(0));
+    Vector#(32,  Ehr#(3, Bit#(32))) rf_r <- replicateM(mkEhr(0));
+    Vector#(32,  Ehr#(3, Bit#(32))) rf_b <- replicateM(mkEhr(0));
+
     // Make queues for between each state
     FIFO#(F2D) f2d_r <- mkFIFO();
     FIFO#(D2E) d2e_r <- mkFIFO();
@@ -137,51 +139,54 @@ module mkpipelined(RVIfc);
     FIFO#(D2E) d2e_b <- mkFIFO();
     FIFO#(E2W) e2w_b <- mkFIFO();
 
-    Ehr#(2, Bit#(1)) epoch <- mkEhr(0);
-    Ehr#(2, Bit#(32)) pc <- mkEhr(32'h0000000);
+    Ehr#(2, Bit#(1)) epoch_r <- mkEhr(0);
+    Ehr#(2, Bit#(32)) pc_r <- mkEhr(32'h0000000);
+    Ehr#(2, Bit#(1)) epoch_b <- mkEhr(0);
+    Ehr#(2, Bit#(32)) pc_b <- mkEhr(32'h0000000);
 
     //make the scoreboard
-    Vector#(32, Ehr#(3, Bit#(2))) scoreboard <- replicateM(mkEhr(0));
+    Vector#(32, Ehr#(3, Bit#(2))) scoreboard_r <- replicateM(mkEhr(0));
+    Vector#(32, Ehr#(3, Bit#(2))) scoreboard_b <- replicateM(mkEhr(0));
 
     //make structure for storing BTB table
     AddrPred btb <- mkPredictor;
 
-	// Code to support Konata visualization
+    // Code to support Konata visualization
     String dumpFile = "pipelined.log" ;
     let lfh <- mkReg(InvalidFile);
-	Reg#(KonataId) fresh_id <- mkReg(0);
-	Reg#(KonataId) commit_id <- mkReg(0);
+    Reg#(KonataId) fresh_id <- mkReg(0);
+    Reg#(KonataId) commit_id <- mkReg(0);
 
-	FIFO#(KonataId) retired <- mkFIFO;
-	FIFO#(KonataId) squashed <- mkFIFO;
+    FIFO#(KonataId) retired <- mkFIFO;
+    FIFO#(KonataId) squashed <- mkFIFO;
 
     Bool debug = False;
     Reg#(Bool) starting <- mkReg(True);
-	rule do_tic_logging;
+    rule do_tic_logging;
         if (starting) begin
             let f <- $fopen(dumpFile, "w") ;
             lfh <= f;
             $fwrite(f, "Kanata\t0004\nC=\t1\n");
             starting <= False;
         end
-		konataTic(lfh);
-	endrule
+        konataTic(lfh);
+    endrule
 
     rule fetch if (!starting);
-        if(debug) $display("Fetch %x", pc[1]);
-        Bit#(32) pc_fetched = pc[1];
+        if(debug) $display("Fetch %x", pc_r[1]);
+        Bit#(32) pc_fetched = pc_r[1];
         // You should put the pc that you fetch in pc_fetched
         // Below is the code to support Konata's visualization
-		let iid <- fetch1Konata(lfh, fresh_id, 0);
+        let iid <- fetch1Konata(lfh, fresh_id, 0);
         // CHANGE THIS LINE TO USE BTB!!
-        pc[1] <= btb.nap(pc[1]);
-        labelKonataLeft(lfh, iid, $format("PC %x",pc[1]));
+        pc_r[1] <= btb.nap(pc_r[1]);
+        labelKonataLeft(lfh, iid, $format("PC %x",pc_r[1]));
         // TODO implement fetch
         let req = Mem {byte_en : 0,
-			addr : pc[1],
-			data : 0};
+            addr : pc_r[1],
+            data : 0};
         toImem.enq(req);
-        f2d_r.enq(F2D{pc : pc[1], ppc : btb.nap(pc[1]), epoch: epoch[1], k_id: iid});
+        f2d_r.enq(F2D{pc : pc_r[1], ppc : btb.nap(pc_r[1]), epoch: epoch_r[1], k_id: iid});
         // This will likely end with something like:
         // f2d.enq(F2D{ ..... k_id: iid});
         // iid is the unique identifier used by konata, that we will pass around everywhere for each instruction
@@ -198,18 +203,18 @@ module mkpipelined(RVIfc);
         if (debug) $display("[Decode] ", fshow(decodedInst));
         let rs1_idx = getInstFields(instr).rs1;
         let rs2_idx = getInstFields(instr).rs2;
-        let rs1 = (rs1_idx ==0 ? 0 : rf[rs1_idx][1]);
-        let rs2 = (rs2_idx == 0 ? 0 : rf[rs2_idx][1]);
+        let rs1 = (rs1_idx ==0 ? 0 : rf_r[rs1_idx][1]);
+        let rs2 = (rs2_idx == 0 ? 0 : rf_r[rs2_idx][1]);
         let fields = getInstFields(decodedInst.inst);
         let rd_idx = fields.rd;
         labelKonataLeft(lfh,from_fetch.k_id, $format(" Potential r1: %x, Potential r2: %x" , rs1, rs2));
         // if the register is being used, wait
-        if (scoreboard[rs1_idx][2] == 0 && scoreboard[rs2_idx][2] == 0 && scoreboard[rd_idx][2] == 0) begin
+        if (scoreboard_r[rs1_idx][2] == 0 && scoreboard_r[rs2_idx][2] == 0 && scoreboard_r[rd_idx][2] == 0) begin
             //mark any changed registers to in use
             if (decodedInst.valid_rd) begin
                 if (rd_idx != 0) begin 
-                    scoreboard[rd_idx][2] <= scoreboard[rd_idx][2] + 1;
-                    if (debug) $display("[Decode scoreboard : ] ", rd_idx, fshow(scoreboard[rd_idx][2]));
+                    scoreboard_r[rd_idx][2] <= scoreboard_r[rd_idx][2] + 1;
+                    if (debug) $display("[Decode scoreboard : ] ", rd_idx, fshow(scoreboard_r[rd_idx][2]));
                 end
                 if(debug) $display("Use Register %x", rd_idx);
             end
@@ -220,19 +225,19 @@ module mkpipelined(RVIfc);
         //state <= Execute;
         // To add a decode event in Konata you will likely do something like:
         //  let from_fetch = f2d.first();
-   	    //	decodeKonata(lfh, from_fetch.k_id);
+        //  decodeKonata(lfh, from_fetch.k_id);
         //  labelKonataLeft(lfh,from_fetch.k_id, $format("Any information you would like to put in the left pane in Konata, attached to the current instruction"));
     endrule
 
     rule execute if (!starting);
         // Similarly, to register an execute event for an instruction:
-    	//	executeKonata(lfh, k_id);
-    	// where k_id is the unique konata identifier that has been passed around that came from the fetch stage
+        //  executeKonata(lfh, k_id);
+        // where k_id is the unique konata identifier that has been passed around that came from the fetch stage
 
 
-    	// Execute is also the place where we advise you to kill mispredicted instructions
-    	// (instead of Decode + Execute like in the class)
-    	// When you kill (or squash) an instruction, you should register an event for Konata:
+        // Execute is also the place where we advise you to kill mispredicted instructions
+        // (instead of Decode + Execute like in the class)
+        // When you kill (or squash) an instruction, you should register an event for Konata:
 
         // squashed.enq(current_inst.k_id);
 
@@ -240,15 +245,15 @@ module mkpipelined(RVIfc);
         let from_fetch = d2e_r.first();
         if (debug) $display("[Execute] ", fshow(from_fetch.dinst));
         let current_id = from_fetch.k_id;
-		executeKonata(lfh, current_id);
-        if (from_fetch.epoch == epoch[0])  begin
+        executeKonata(lfh, current_id);
+        if (from_fetch.epoch == epoch_r[0])  begin
             let imm = getImmediate(from_fetch.dinst);
-		    Bool mmio = False;
-		    let data = execALU32(from_fetch.dinst.inst, from_fetch.rv1, from_fetch.rv2, imm, from_fetch.pc);
-		    let isUnsigned = 0;
-		    let funct3 = getInstFields(from_fetch.dinst.inst).funct3;
-		    let size = funct3[1:0];
-		    let addr = from_fetch.rv1 + imm;
+            Bool mmio = False;
+            let data = execALU32(from_fetch.dinst.inst, from_fetch.rv1, from_fetch.rv2, imm, from_fetch.pc);
+            let isUnsigned = 0;
+            let funct3 = getInstFields(from_fetch.dinst.inst).funct3;
+            let size = funct3[1:0];
+            let addr = from_fetch.rv1 + imm;
             Bit#(2) offset = addr[1:0];
             if (isMemoryInst(from_fetch.dinst)) begin
                 // Technical details for load byte/halfword/word
@@ -287,8 +292,8 @@ module mkpipelined(RVIfc);
 
             //if the predicted next PC is not the actual PC, update epoch etc.
             if(nextPc != from_fetch.ppc) begin
-                pc[0] <= nextPc;
-                epoch[0] <= ~epoch[0]; 
+                pc_r[0] <= nextPc;
+                epoch_r[0] <= ~epoch_r[0]; 
                 //for btb training
                 btb.update(from_fetch.pc, nextPc, controlResult.taken);
                 if(debug) $display("Redirect %x", nextPc);
@@ -303,10 +308,10 @@ module mkpipelined(RVIfc);
             let fields = getInstFields(from_fetch.dinst.inst);
             let rd_idx = fields.rd;
             if (from_fetch.dinst.valid_rd && rd_idx != 0 ) begin
-                scoreboard[rd_idx][1] <= scoreboard[rd_idx][1] - 1;
+                scoreboard_r[rd_idx][1] <= scoreboard_r[rd_idx][1] - 1;
             end
             if(debug) $display("Free Execute Register %x", rd_idx);
-            if (debug) $display("[Execute scoreboard : ] ", rd_idx, fshow(scoreboard[rd_idx][1]));
+            if (debug) $display("[Execute scoreboard : ] ", rd_idx, fshow(scoreboard_r[rd_idx][1]));
         end
         d2e_r.deq();
 
@@ -315,81 +320,81 @@ module mkpipelined(RVIfc);
     rule writeback if (!starting);
         let from_fetched = e2w_r.first();
         let current_id = from_fetched.k_id;
-		writebackKonata(lfh,current_id);
+        writebackKonata(lfh,current_id);
         retired.enq(current_id);
         let data = from_fetched.data;
         let dInst = from_fetched.dinst;
         let fields = getInstFields(dInst.inst);
         if (isMemoryInst(dInst)) begin // (* // write_val *) 
             let resp = ?;
-		    if (from_fetched.mem_business.mmio) begin 
+            if (from_fetched.mem_business.mmio) begin 
                 resp = fromMMIO.first();
 		        fromMMIO.deq();
 		    end else if(dInst.inst[5] == 0) begin // only deq for reads
                 resp = fromDmem.first();
-		        fromDmem.deq();
-		    end
+                fromDmem.deq();
+            end
             let mem_data = resp.data;
             mem_data = mem_data >> {from_fetched.mem_business.offset ,3'b0};
             case ({pack(from_fetched.mem_business.isUnsigned), from_fetched.mem_business.size}) matches
-	     	3'b000 : data = signExtend(mem_data[7:0]);
-	     	3'b001 : data = signExtend(mem_data[15:0]);
-	     	3'b100 : data = zeroExtend(mem_data[7:0]);
-	     	3'b101 : data = zeroExtend(mem_data[15:0]);
-	     	3'b010 : data = mem_data;
+            3'b000 : data = signExtend(mem_data[7:0]);
+            3'b001 : data = signExtend(mem_data[15:0]);
+            3'b100 : data = zeroExtend(mem_data[7:0]);
+            3'b101 : data = zeroExtend(mem_data[15:0]);
+            3'b010 : data = mem_data;
              endcase
-		end
-		if(debug) $display("[Writeback]", fshow(dInst));
+        end
+        if(debug) $display("[Writeback]", fshow(dInst));
         if (!dInst.legal) begin
-			if (debug) $display("[Writeback] Illegal Inst, Drop and fault: ", fshow(dInst));
-			$finish(1);	// Fault
-	    end
+            if (debug) $display("[Writeback] Illegal Inst, Drop and fault: ", fshow(dInst));
+            $finish(1); // Fault
+        end
         let rd_idx = fields.rd;
-		if (dInst.valid_rd) begin
+        if (dInst.valid_rd) begin
             if (rd_idx != 0) begin 
-                rf[rd_idx][0] <= data;
-                scoreboard[rd_idx][0] <= scoreboard[rd_idx][0] - 1; 
-                if (debug) $display("[Writeback scoreboard : ] ", rd_idx, fshow(scoreboard[rd_idx][0]));
+                rf_r[rd_idx][0] <= data;
+                scoreboard_r[rd_idx][0] <= scoreboard_r[rd_idx][0] - 1; 
+                if (debug) $display("[Writeback scoreboard : ] ", rd_idx, fshow(scoreboard_r[rd_idx][0]));
             end
-		end
+        end
         if(debug) $display("Free Writeback Register %x", rd_idx);
         e2w_r.deq();
     endrule
 
 
-	// ADMINISTRATION:
+    // ADMINISTRATION:
 
     rule administrative_konata_commit;
-		    retired.deq();
-		    let f = retired.first();
-		    commitKonata(lfh, f, commit_id);
-	endrule
+            retired.deq();
+            let f = retired.first();
+            commitKonata(lfh, f, commit_id);
+    endrule
 
-	rule administrative_konata_flush;
-		    squashed.deq();
-		    let f = squashed.first();
-		    squashKonata(lfh, f);
-	endrule
+    rule administrative_konata_flush;
+            squashed.deq();
+            let f = squashed.first();
+            squashKonata(lfh, f);
+    endrule
 
     method ActionValue#(Mem) getIReq();
-		toImem.deq();
-		return toImem.first();
+        toImem.deq();
+        return toImem.first();
     endmethod
     method Action getIResp(Mem a);
-    	fromImem.enq(a);
+        fromImem.enq(a);
     endmethod
     method ActionValue#(Mem) getDReq();
-		toDmem.deq();
-		return toDmem.first();
+        toDmem.deq();
+        return toDmem.first();
     endmethod
     method Action getDResp(Mem a);
-		fromDmem.enq(a);
+        fromDmem.enq(a);
     endmethod
     method ActionValue#(Mem) getMMIOReq();
-		toMMIO.deq();
-		return toMMIO.first();
+        toMMIO.deq();
+        return toMMIO.first();
     endmethod
     method Action getMMIOResp(Mem a);
-		fromMMIO.enq(a);
+        fromMMIO.enq(a);
     endmethod
 endmodule
