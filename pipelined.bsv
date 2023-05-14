@@ -157,6 +157,7 @@ module mkpipelined(RVIfc);
     //adding support for SMT
     FIFOF#(Bool) colorCacheRed <- mkFIFOF1;
     Reg#(Bool) colorPriority <- mkReg(True);
+    Reg#(Bool) fetchColorPriority <- mkReg(True);
     Reg#(Bool) colorPriorityWrite <- mkReg(True);
     FIFOF#(Bool) colorMRed <- mkFIFOF1;
     Reg#(Bool) instRed <- mkReg(True);
@@ -185,7 +186,7 @@ module mkpipelined(RVIfc);
     rule fetch if (!starting);
         //check instruction priority
         //make sure there is room in the fifo your giving it to, and you still have instructions
-        if (f2d_r.notFull) begin
+        if (f2d_r.notFull && fetchColorPriority) begin
             if(debug) $display("Fetch %x", pc_r[1]);
             Bit#(32) pc_fetched = pc_r[1];
             // You should put the pc that you fetch in pc_fetched
@@ -216,11 +217,12 @@ module mkpipelined(RVIfc);
             let req = Mem {byte_en : 0,
                 addr : pc_b[1],
                 data : 0};
-            toImemRed.enq(req);
+            toImemBlue.enq(req);
             f2d_b.enq(F2D{pc : pc_b[1], ppc : btb.nap(pc_b[1]), epoch: epoch_b[1], k_id: iid});
             //set color instruction sent in fifo
             colorCacheRed.enq(False);
         end
+        //fetchColorPriority <= ! fetchColorPriority;
     endrule
 
     rule decode if (!starting);
@@ -270,8 +272,8 @@ module mkpipelined(RVIfc);
                 if (debug) $display("[Decode] ", fshow(decodedInst));
                 let rs1_idx = getInstFields(instr).rs1;
                 let rs2_idx = getInstFields(instr).rs2;
-                let rs1 = (rs1_idx ==0 ? 0 : rf_r[rs1_idx][1]);
-                let rs2 = (rs2_idx == 0 ? 0 : rf_r[rs2_idx][1]);
+                let rs1 = (rs1_idx ==0 ? 0 : rf_b[rs1_idx][1]);
+                let rs2 = (rs2_idx == 0 ? 0 : rf_b[rs2_idx][1]);
                 let fields = getInstFields(decodedInst.inst);
                 let rd_idx = fields.rd;
                 labelKonataLeft(lfh,from_fetch.k_id, $format(" Potential r1: %x, Potential r2: %x" , rs1, rs2));
@@ -287,7 +289,7 @@ module mkpipelined(RVIfc);
                     end
                     d2e_b.enq(D2E{dinst: decodedInst, pc: from_fetch.pc, ppc: from_fetch.ppc, epoch: from_fetch.epoch, rv1: rs1, rv2: rs2, k_id: from_fetch.k_id});
                     f2d_b.deq();
-                    fromImemRed.deq();
+                    fromImemBlue.deq();
                 end
             end
 
