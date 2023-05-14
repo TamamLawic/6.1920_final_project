@@ -291,8 +291,13 @@ void MODEL_mkmulticycle::get_version(char const **name, char const **build)
 time_t MODEL_mkmulticycle::get_creation_time()
 {
   
+<<<<<<< HEAD
   /* Fri May 12 22:18:58 UTC 2023 */
   return 1683929938llu;
+=======
+  /* Sun May 14 07:24:55 UTC 2023 */
+  return 1684049095llu;
+>>>>>>> 9423a9c (partial implementation of SMT, siingle red path)
 }
 
 /* State dumping function */

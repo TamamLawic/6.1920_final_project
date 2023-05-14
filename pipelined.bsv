@@ -170,7 +170,7 @@ module mkpipelined(RVIfc);
     FIFO#(KonataId) retired <- mkFIFO;
     FIFO#(KonataId) squashed <- mkFIFO;
 
-    Bool debug = True;
+    Bool debug = False;
     Reg#(Bool) starting <- mkReg(True);
     rule do_tic_logging;
         if (starting) begin

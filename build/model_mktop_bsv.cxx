@@ -3663,8 +3663,13 @@ void MODEL_mktop_bsv::get_version(char const **name, char const **build)
 time_t MODEL_mktop_bsv::get_creation_time()
 {
   
+<<<<<<< HEAD
   /* Fri May 12 22:19:01 UTC 2023 */
   return 1683929941llu;
+=======
+  /* Sun May 14 07:24:58 UTC 2023 */
+  return 1684049098llu;
+>>>>>>> 9423a9c (partial implementation of SMT, siingle red path)
 }
 
 /* State dumping function */
