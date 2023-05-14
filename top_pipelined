@@ -9,4 +9,8 @@ do
     exec $BLUESPECDIR/tcllib/bluespec/bluesim.tcl $0.so mktop_pipelined --script_name `basename $0` -h
   fi
 done
+<<<<<<< HEAD
 exec $BLUESPECDIR/tcllib/bluespec/bluesim.tcl $0.so mktop_pipelined --script_name `basename $0` --creation_time 1683929955 "$@"
+=======
+exec $BLUESPECDIR/tcllib/bluespec/bluesim.tcl $0.so mktop_pipelined --script_name `basename $0` --creation_time 1684078745 "$@"
+>>>>>>> 42a381e (partial implementation SMT, passing red)
