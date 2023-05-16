@@ -1,0 +1,924 @@
+
+build/thelie32:     file format elf32-littleriscv
+
+
+Disassembly of section .text.init:
+
+00000000 <_start>:
+   0:	00000093          	li	ra,0
+   4:	00000113          	li	sp,0
+   8:	00000193          	li	gp,0
+   c:	00000213          	li	tp,0
+  10:	00000293          	li	t0,0
+  14:	00000313          	li	t1,0
+  18:	00000393          	li	t2,0
+  1c:	00000413          	li	s0,0
+  20:	00000493          	li	s1,0
+  24:	00000513          	li	a0,0
+  28:	00000593          	li	a1,0
+  2c:	00000613          	li	a2,0
+  30:	00000693          	li	a3,0
+  34:	00000713          	li	a4,0
+  38:	00000793          	li	a5,0
+  3c:	00000813          	li	a6,0
+  40:	00000893          	li	a7,0
+  44:	00000913          	li	s2,0
+  48:	00000993          	li	s3,0
+  4c:	00000a13          	li	s4,0
+  50:	00000a93          	li	s5,0
+  54:	00000b13          	li	s6,0
+  58:	00000b93          	li	s7,0
+  5c:	00000c13          	li	s8,0
+  60:	00000c93          	li	s9,0
+  64:	00000d13          	li	s10,0
+  68:	00000d93          	li	s11,0
+  6c:	00000e13          	li	t3,0
+  70:	00000e93          	li	t4,0
+  74:	00000f13          	li	t5,0
+  78:	00000f93          	li	t6,0
+  7c:	10000137          	lui	sp,0x10000
+  80:	ff010113          	addi	sp,sp,-16 # ffffff0 <_end+0xfffcfe4>
+  84:	77d010ef          	jal	ra,2000 <main>
+  88:	00000513          	li	a0,0
+  8c:	044020ef          	jal	ra,20d0 <exit>
+  90:	0000006f          	j	90 <_start+0x90>
+  94:	00000013          	nop
+  98:	00000013          	nop
+  9c:	00000013          	nop
+  a0:	00000013          	nop
+  a4:	00000013          	nop
+  a8:	00000013          	nop
+  ac:	00000013          	nop
+  b0:	00000013          	nop
+  b4:	00000013          	nop
+  b8:	00000013          	nop
+  bc:	00000013          	nop
+	...
+
+Disassembly of section .text.init1:
+
+00001000 <.text.init1>:
+    1000:	00000093          	li	ra,0
+    1004:	00000113          	li	sp,0
+    1008:	00000193          	li	gp,0
+    100c:	00000213          	li	tp,0
+    1010:	00000293          	li	t0,0
+    1014:	00000313          	li	t1,0
+    1018:	00000393          	li	t2,0
+    101c:	00000413          	li	s0,0
+    1020:	00000493          	li	s1,0
+    1024:	00100513          	li	a0,1
+    1028:	00000593          	li	a1,0
+    102c:	00000613          	li	a2,0
+    1030:	00000693          	li	a3,0
+    1034:	00000713          	li	a4,0
+    1038:	00000793          	li	a5,0
+    103c:	00000813          	li	a6,0
+    1040:	00000893          	li	a7,0
+    1044:	00000913          	li	s2,0
+    1048:	00000993          	li	s3,0
+    104c:	00000a13          	li	s4,0
+    1050:	00000a93          	li	s5,0
+    1054:	00000b13          	li	s6,0
+    1058:	00000b93          	li	s7,0
+    105c:	00000c13          	li	s8,0
+    1060:	00000c93          	li	s9,0
+    1064:	00000d13          	li	s10,0
+    1068:	00000d93          	li	s11,0
+    106c:	00000e13          	li	t3,0
+    1070:	00000e93          	li	t4,0
+    1074:	00000f13          	li	t5,0
+    1078:	00000f93          	li	t6,0
+    107c:	0f000137          	lui	sp,0xf000
+    1080:	781000ef          	jal	ra,2000 <main>
+    1084:	00000513          	li	a0,0
+    1088:	048010ef          	jal	ra,20d0 <exit>
+    108c:	0000006f          	j	108c <_start+0x108c>
+
+Disassembly of section .text:
+
+00002000 <main>:
+    2000:	fe010113          	addi	sp,sp,-32 # effffe0 <_end+0xeffcfd4>
+    2004:	00112e23          	sw	ra,28(sp)
+    2008:	00812c23          	sw	s0,24(sp)
+    200c:	02010413          	addi	s0,sp,32
+    2010:	00000797          	auipc	a5,0x0
+    2014:	0f878793          	addi	a5,a5,248 # 2108 <exit+0x38>
+    2018:	fef42423          	sw	a5,-24(s0)
+    201c:	fe842783          	lw	a5,-24(s0)
+    2020:	fef42623          	sw	a5,-20(s0)
+    2024:	0200006f          	j	2044 <main+0x44>
+    2028:	fec42783          	lw	a5,-20(s0)
+    202c:	0007c783          	lbu	a5,0(a5)
+    2030:	00078513          	mv	a0,a5
+    2034:	064000ef          	jal	ra,2098 <putchar>
+    2038:	fec42783          	lw	a5,-20(s0)
+    203c:	00178793          	addi	a5,a5,1
+    2040:	fef42623          	sw	a5,-20(s0)
+    2044:	fe842783          	lw	a5,-24(s0)
+    2048:	59a78793          	addi	a5,a5,1434
+    204c:	fec42703          	lw	a4,-20(s0)
+    2050:	fcf76ce3          	bltu	a4,a5,2028 <main+0x28>
+    2054:	00000793          	li	a5,0
+    2058:	00078513          	mv	a0,a5
+    205c:	01c12083          	lw	ra,28(sp)
+    2060:	01812403          	lw	s0,24(sp)
+    2064:	02010113          	addi	sp,sp,32
+    2068:	00008067          	ret
+
+0000206c <getchar>:
+    206c:	ff010113          	addi	sp,sp,-16
+    2070:	00812623          	sw	s0,12(sp)
+    2074:	01010413          	addi	s0,sp,16
+    2078:	00001797          	auipc	a5,0x1
+    207c:	f8c78793          	addi	a5,a5,-116 # 3004 <GET_ADDR>
+    2080:	0007a783          	lw	a5,0(a5)
+    2084:	0007a783          	lw	a5,0(a5)
+    2088:	00078513          	mv	a0,a5
+    208c:	00c12403          	lw	s0,12(sp)
+    2090:	01010113          	addi	sp,sp,16
+    2094:	00008067          	ret
+
+00002098 <putchar>:
+    2098:	fe010113          	addi	sp,sp,-32
+    209c:	00812e23          	sw	s0,28(sp)
+    20a0:	02010413          	addi	s0,sp,32
+    20a4:	fea42623          	sw	a0,-20(s0)
+    20a8:	00001797          	auipc	a5,0x1
+    20ac:	f5878793          	addi	a5,a5,-168 # 3000 <PUT_ADDR>
+    20b0:	0007a783          	lw	a5,0(a5)
+    20b4:	fec42703          	lw	a4,-20(s0)
+    20b8:	00e7a023          	sw	a4,0(a5)
+    20bc:	fec42783          	lw	a5,-20(s0)
+    20c0:	00078513          	mv	a0,a5
+    20c4:	01c12403          	lw	s0,28(sp)
+    20c8:	02010113          	addi	sp,sp,32
+    20cc:	00008067          	ret
+
+000020d0 <exit>:
+    20d0:	fe010113          	addi	sp,sp,-32
+    20d4:	00812e23          	sw	s0,28(sp)
+    20d8:	02010413          	addi	s0,sp,32
+    20dc:	fea42623          	sw	a0,-20(s0)
+    20e0:	00001797          	auipc	a5,0x1
+    20e4:	f2878793          	addi	a5,a5,-216 # 3008 <FINISH_ADDR>
+    20e8:	0007a783          	lw	a5,0(a5)
+    20ec:	fec42703          	lw	a4,-20(s0)
+    20f0:	00e7a023          	sw	a4,0(a5)
+    20f4:	fec42783          	lw	a5,-20(s0)
+    20f8:	00078513          	mv	a0,a5
+    20fc:	01c12403          	lw	s0,28(sp)
+    2100:	02010113          	addi	sp,sp,32
+    2104:	00008067          	ret
+
+Disassembly of section .rodata:
+
+00002108 <.rodata>:
+    2108:	2020                	fld	fs0,64(s0)
+    210a:	2020                	fld	fs0,64(s0)
+    210c:	2020                	fld	fs0,64(s0)
+    210e:	2020                	fld	fs0,64(s0)
+    2110:	2020                	fld	fs0,64(s0)
+    2112:	2020                	fld	fs0,64(s0)
+    2114:	2020                	fld	fs0,64(s0)
+    2116:	2020                	fld	fs0,64(s0)
+    2118:	2020                	fld	fs0,64(s0)
+    211a:	2e20                	fld	fs0,88(a2)
+    211c:	4d4d                	li	s10,19
+    211e:	2e4d                	jal	24d0 <exit+0x400>
+    2120:	200a                	fld	ft0,128(sp)
+    2122:	2020                	fld	fs0,64(s0)
+    2124:	2020                	fld	fs0,64(s0)
+    2126:	2020                	fld	fs0,64(s0)
+    2128:	2020                	fld	fs0,64(s0)
+    212a:	2020                	fld	fs0,64(s0)
+    212c:	2020                	fld	fs0,64(s0)
+    212e:	2020                	fld	fs0,64(s0)
+    2130:	2020                	fld	fs0,64(s0)
+    2132:	2020                	fld	fs0,64(s0)
+    2134:	2020                	fld	fs0,64(s0)
+    2136:	4f2e                	lw	t5,200(sp)
+    2138:	4d4d                	li	s10,19
+    213a:	2020                	fld	fs0,64(s0)
+    213c:	2020                	fld	fs0,64(s0)
+    213e:	2020                	fld	fs0,64(s0)
+    2140:	2020                	fld	fs0,64(s0)
+    2142:	2020                	fld	fs0,64(s0)
+    2144:	2020                	fld	fs0,64(s0)
+    2146:	2020                	fld	fs0,64(s0)
+    2148:	2020                	fld	fs0,64(s0)
+    214a:	2020                	fld	fs0,64(s0)
+    214c:	2020                	fld	fs0,64(s0)
+    214e:	2020                	fld	fs0,64(s0)
+    2150:	4d20                	lw	s0,88(a0)
+    2152:	3f4d                	jal	2104 <exit+0x34>
+    2154:	200a                	fld	ft0,128(sp)
+    2156:	2020                	fld	fs0,64(s0)
+    2158:	2020                	fld	fs0,64(s0)
+    215a:	2020                	fld	fs0,64(s0)
+    215c:	2020                	fld	fs0,64(s0)
+    215e:	2020                	fld	fs0,64(s0)
+    2160:	2020                	fld	fs0,64(s0)
+    2162:	2020                	fld	fs0,64(s0)
+    2164:	2020                	fld	fs0,64(s0)
+    2166:	2020                	fld	fs0,64(s0)
+    2168:	2020                	fld	fs0,64(s0)
+    216a:	7e20                	flw	fs0,120(a2)
+    216c:	4d4d                	li	s10,19
+    216e:	204d                	jal	2210 <exit+0x140>
+    2170:	2020                	fld	fs0,64(s0)
+    2172:	2020                	fld	fs0,64(s0)
+    2174:	2020                	fld	fs0,64(s0)
+    2176:	2020                	fld	fs0,64(s0)
+    2178:	2020                	fld	fs0,64(s0)
+    217a:	2020                	fld	fs0,64(s0)
+    217c:	2020                	fld	fs0,64(s0)
+    217e:	2020                	fld	fs0,64(s0)
+    2180:	2020                	fld	fs0,64(s0)
+    2182:	2020                	fld	fs0,64(s0)
+    2184:	2020                	fld	fs0,64(s0)
+    2186:	2020                	fld	fs0,64(s0)
+    2188:	2020                	fld	fs0,64(s0)
+    218a:	2020                	fld	fs0,64(s0)
+    218c:	2e20                	fld	fs0,88(a2)
+    218e:	2020                	fld	fs0,64(s0)
+    2190:	2e2e                	fld	ft8,200(sp)
+    2192:	200a                	fld	ft0,128(sp)
+    2194:	2020                	fld	fs0,64(s0)
+    2196:	2020                	fld	fs0,64(s0)
+    2198:	2020                	fld	fs0,64(s0)
+    219a:	2020                	fld	fs0,64(s0)
+    219c:	2020                	fld	fs0,64(s0)
+    219e:	2020                	fld	fs0,64(s0)
+    21a0:	2020                	fld	fs0,64(s0)
+    21a2:	2020                	fld	fs0,64(s0)
+    21a4:	2020                	fld	fs0,64(s0)
+    21a6:	3d20                	fld	fs0,120(a0)
+    21a8:	4d4d                	li	s10,19
+    21aa:	4d7e                	lw	s10,220(sp)
+    21ac:	384d                	jal	1a5e <_start+0x1a5e>
+    21ae:	2020                	fld	fs0,64(s0)
+    21b0:	2020                	fld	fs0,64(s0)
+    21b2:	2020                	fld	fs0,64(s0)
+    21b4:	2020                	fld	fs0,64(s0)
+    21b6:	2020                	fld	fs0,64(s0)
+    21b8:	2020                	fld	fs0,64(s0)
+    21ba:	2020                	fld	fs0,64(s0)
+    21bc:	2020                	fld	fs0,64(s0)
+    21be:	2020                	fld	fs0,64(s0)
+    21c0:	2020                	fld	fs0,64(s0)
+    21c2:	202e                	fld	ft0,200(sp)
+    21c4:	5a3a                	lw	s4,172(sp)
+    21c6:	4d4d                	li	s10,19
+    21c8:	4d4d                	li	s10,19
+    21ca:	4d4d                	li	s10,19
+    21cc:	4d4d                	li	s10,19
+    21ce:	3a4d                	jal	1b80 <_start+0x1b80>
+    21d0:	200a                	fld	ft0,128(sp)
+    21d2:	2020                	fld	fs0,64(s0)
+    21d4:	2020                	fld	fs0,64(s0)
+    21d6:	2020                	fld	fs0,64(s0)
+    21d8:	2020                	fld	fs0,64(s0)
+    21da:	2020                	fld	fs0,64(s0)
+    21dc:	2020                	fld	fs0,64(s0)
+    21de:	2020                	fld	fs0,64(s0)
+    21e0:	2020                	fld	fs0,64(s0)
+    21e2:	2020                	fld	fs0,64(s0)
+    21e4:	4d4d                	li	s10,19
+    21e6:	2038                	fld	fa4,64(s0)
+    21e8:	2b20                	fld	fs0,80(a4)
+    21ea:	4d4d                	li	s10,19
+    21ec:	202e                	fld	ft0,200(sp)
+    21ee:	2020                	fld	fs0,64(s0)
+    21f0:	2020                	fld	fs0,64(s0)
+    21f2:	2020                	fld	fs0,64(s0)
+    21f4:	202e                	fld	ft0,200(sp)
+    21f6:	4f3a                	lw	t5,140(sp)
+    21f8:	4d4d                	li	s10,19
+    21fa:	4d4d                	li	s10,19
+    21fc:	4d4d                	li	s10,19
+    21fe:	444d                	li	s0,19
+    2200:	2e2e2e2b          	0x2e2e2e2b
+    2204:	4e2e                	lw	t3,200(sp)
+    2206:	4d4d                	li	s10,19
+    2208:	2e44                	fld	fs1,152(a2)
+    220a:	2020                	fld	fs0,64(s0)
+    220c:	4d3a                	lw	s10,140(sp)
+    220e:	0a4d                	addi	s4,s4,19
+    2210:	2020                	fld	fs0,64(s0)
+    2212:	2020                	fld	fs0,64(s0)
+    2214:	2020                	fld	fs0,64(s0)
+    2216:	2020                	fld	fs0,64(s0)
+    2218:	2020                	fld	fs0,64(s0)
+    221a:	2020                	fld	fs0,64(s0)
+    221c:	2020                	fld	fs0,64(s0)
+    221e:	2020                	fld	fs0,64(s0)
+    2220:	4d2e                	lw	s10,200(sp)
+    2222:	384d                	jal	1ad4 <_start+0x1ad4>
+    2224:	202e                	fld	ft0,200(sp)
+    2226:	2020                	fld	fs0,64(s0)
+    2228:	4d20                	lw	s0,88(a0)
+    222a:	4f4d                	li	t5,19
+    222c:	2e20                	fld	fs0,88(a2)
+    222e:	4d4d                	li	s10,19
+    2230:	384d                	jal	1ae2 <_start+0x1ae2>
+    2232:	2e2c                	fld	fa1,88(a2)
+    2234:	2020                	fld	fs0,64(s0)
+    2236:	202e                	fld	ft0,200(sp)
+    2238:	2020                	fld	fs0,64(s0)
+    223a:	2020                	fld	fs0,64(s0)
+    223c:	2e2e                	fld	ft8,200(sp)
+    223e:	4e20                	lw	s0,88(a2)
+    2240:	4d4d                	li	s10,19
+    2242:	2e44                	fld	fs1,152(a2)
+    2244:	202e                	fld	ft0,200(sp)
+    2246:	4d20                	lw	s0,88(a0)
+    2248:	4d4d                	li	s10,19
+    224a:	4d4d                	li	s10,19
+    224c:	4d4d                	li	s10,19
+    224e:	200a                	fld	ft0,128(sp)
+    2250:	2020                	fld	fs0,64(s0)
+    2252:	2020                	fld	fs0,64(s0)
+    2254:	2020                	fld	fs0,64(s0)
+    2256:	2020                	fld	fs0,64(s0)
+    2258:	4d2e                	lw	s10,200(sp)
+    225a:	4e4d                	li	t3,19
+    225c:	2020                	fld	fs0,64(s0)
+    225e:	204f4d27          	fsq	ft4,538(t5)
+    2262:	2020                	fld	fs0,64(s0)
+    2264:	2020                	fld	fs0,64(s0)
+    2266:	2020                	fld	fs0,64(s0)
+    2268:	4d2e                	lw	s10,200(sp)
+    226a:	2e4d                	jal	261c <exit+0x54c>
+    226c:	2020                	fld	fs0,64(s0)
+    226e:	2e2e                	fld	ft8,200(sp)
+    2270:	4d4d                	li	s10,19
+    2272:	2e4d                	jal	2624 <exit+0x554>
+    2274:	2e20                	fld	fs0,88(a2)
+    2276:	2020                	fld	fs0,64(s0)
+    2278:	4f20                	lw	s0,88(a4)
+    227a:	4d4d                	li	s10,19
+    227c:	204d                	jal	231e <exit+0x24e>
+    227e:	202e                	fld	ft0,200(sp)
+    2280:	3f2e                	fld	ft10,232(sp)
+    2282:	4d4d                	li	s10,19
+    2284:	4d4d                	li	s10,19
+    2286:	4d4d                	li	s10,19
+    2288:	4d4d                	li	s10,19
+    228a:	4d4d                	li	s10,19
+    228c:	0a4d                	addi	s4,s4,19
+    228e:	2020                	fld	fs0,64(s0)
+    2290:	2020                	fld	fs0,64(s0)
+    2292:	4d4d                	li	s10,19
+    2294:	3d44                	fld	fs1,184(a0)
+    2296:	202e                	fld	ft0,200(sp)
+    2298:	3a20                	fld	fs0,112(a2)
+    229a:	2e4d                	jal	264c <exit+0x57c>
+    229c:	2020                	fld	fs0,64(s0)
+    229e:	2e38                	fld	fa4,88(a2)
+    22a0:	2020                	fld	fs0,64(s0)
+    22a2:	2020                	fld	fs0,64(s0)
+    22a4:	2020                	fld	fs0,64(s0)
+    22a6:	2e20                	fld	fs0,88(a2)
+    22a8:	5a2c                	lw	a1,112(a2)
+    22aa:	204d                	jal	234c <exit+0x27c>
+    22ac:	4d2e                	lw	s10,200(sp)
+    22ae:	4d4d                	li	s10,19
+    22b0:	202e                	fld	ft0,200(sp)
+    22b2:	242e                	fld	fs0,200(sp)
+    22b4:	4d4d                	li	s10,19
+    22b6:	2e4d                	jal	2668 <exit+0x598>
+    22b8:	2e2e                	fld	ft8,200(sp)
+    22ba:	202e                	fld	ft0,200(sp)
+    22bc:	4d4d                	li	s10,19
+    22be:	4d4d                	li	s10,19
+    22c0:	4d4d                	li	s10,19
+    22c2:	4d4d                	li	s10,19
+    22c4:	4d4d                	li	s10,19
+    22c6:	4d4d                	li	s10,19
+    22c8:	4d4d                	li	s10,19
+    22ca:	4d4d                	li	s10,19
+    22cc:	200a                	fld	ft0,128(sp)
+    22ce:	2020                	fld	fs0,64(s0)
+    22d0:	4d20                	lw	s0,88(a0)
+    22d2:	4d4d                	li	s10,19
+    22d4:	2e49                	jal	2666 <exit+0x596>
+    22d6:	202e                	fld	ft0,200(sp)
+    22d8:	2e2e                	fld	ft8,200(sp)
+    22da:	202e                	fld	ft0,200(sp)
+    22dc:	4d20                	lw	s0,88(a0)
+    22de:	2e4d                	jal	2690 <exit+0x5c0>
+    22e0:	202e                	fld	ft0,200(sp)
+    22e2:	2e2e                	fld	ft8,200(sp)
+    22e4:	2e2e                	fld	ft8,200(sp)
+    22e6:	2020                	fld	fs0,64(s0)
+    22e8:	2e20                	fld	fs0,88(a2)
+    22ea:	2024                	fld	fs1,64(s0)
+    22ec:	2e2e                	fld	ft8,200(sp)
+    22ee:	4d4d                	li	s10,19
+    22f0:	4f4d                	li	t5,19
+    22f2:	202e                	fld	ft0,200(sp)
+    22f4:	2e2e                	fld	ft8,200(sp)
+    22f6:	4d2e                	lw	s10,200(sp)
+    22f8:	4d4d                	li	s10,19
+    22fa:	4d4d                	li	s10,19
+    22fc:	4d4d                	li	s10,19
+    22fe:	4d4d                	li	s10,19
+    2300:	4d4d                	li	s10,19
+    2302:	4d4d                	li	s10,19
+    2304:	4d4d                	li	s10,19
+    2306:	374d                	jal	22a8 <exit+0x1d8>
+    2308:	200a                	fld	ft0,128(sp)
+    230a:	2020                	fld	fs0,64(s0)
+    230c:	4d20                	lw	s0,88(a0)
+    230e:	2044                	fld	fs1,128(s0)
+    2310:	4d2e                	lw	s10,200(sp)
+    2312:	4d4d                	li	s10,19
+    2314:	2e38                	fld	fa4,88(a2)
+    2316:	202e                	fld	ft0,200(sp)
+    2318:	2e2e                	fld	ft8,200(sp)
+    231a:	4d2e                	lw	s10,200(sp)
+    231c:	4d4d                	li	s10,19
+    231e:	2e4d                	jal	26d0 <exit+0x600>
+    2320:	2e2e                	fld	ft8,200(sp)
+    2322:	2020                	fld	fs0,64(s0)
+    2324:	4e20                	lw	s0,88(a2)
+    2326:	4d4d                	li	s10,19
+    2328:	202e204f          	fnmadd.s	ft0,ft8,ft2,ft4,rdn
+    232c:	2020                	fld	fs0,64(s0)
+    232e:	4d38                	lw	a4,88(a0)
+    2330:	4d4d                	li	s10,19
+    2332:	4d4d                	li	s10,19
+    2334:	4d4d                	li	s10,19
+    2336:	4d4d                	li	s10,19
+    2338:	4d4d                	li	s10,19
+    233a:	4d4d                	li	s10,19
+    233c:	4d4d                	li	s10,19
+    233e:	204d                	jal	23e0 <exit+0x310>
+    2340:	202e                	fld	ft0,200(sp)
+    2342:	2020                	fld	fs0,64(s0)
+    2344:	4920                	lw	s0,80(a0)
+    2346:	0a4d                	addi	s4,s4,19
+    2348:	2020                	fld	fs0,64(s0)
+    234a:	2020                	fld	fs0,64(s0)
+    234c:	444d                	li	s0,19
+    234e:	2020                	fld	fs0,64(s0)
+    2350:	2020                	fld	fs0,64(s0)
+    2352:	2e20                	fld	fs0,88(a2)
+    2354:	2e2e                	fld	ft8,200(sp)
+    2356:	4d5a                	lw	s10,148(sp)
+    2358:	4d4d                	li	s10,19
+    235a:	4d4d                	li	s10,19
+    235c:	4d4d                	li	s10,19
+    235e:	4d4d                	li	s10,19
+    2360:	4d4d                	li	s10,19
+    2362:	2e44                	fld	fs1,152(a2)
+    2364:	202e                	fld	ft0,200(sp)
+    2366:	2e2e                	fld	ft8,200(sp)
+    2368:	4d7e                	lw	s10,220(sp)
+    236a:	4d4d                	li	s10,19
+    236c:	4d4d                	li	s10,19
+    236e:	4d4d                	li	s10,19
+    2370:	4d4d                	li	s10,19
+    2372:	4d4d                	li	s10,19
+    2374:	4d4d                	li	s10,19
+    2376:	4d4d                	li	s10,19
+    2378:	3f4d                	jal	232a <exit+0x25a>
+    237a:	202e                	fld	ft0,200(sp)
+    237c:	2020                	fld	fs0,64(s0)
+    237e:	2e2e                	fld	ft8,200(sp)
+    2380:	4d4d                	li	s10,19
+    2382:	4d4d                	li	s10,19
+    2384:	4d4d                	li	s10,19
+    2386:	200a                	fld	ft0,128(sp)
+    2388:	2020                	fld	fs0,64(s0)
+    238a:	4d20                	lw	s0,88(a0)
+    238c:	2044                	fld	fs1,128(s0)
+    238e:	2020                	fld	fs0,64(s0)
+    2390:	2020                	fld	fs0,64(s0)
+    2392:	2020                	fld	fs0,64(s0)
+    2394:	2020                	fld	fs0,64(s0)
+    2396:	2020                	fld	fs0,64(s0)
+    2398:	2020                	fld	fs0,64(s0)
+    239a:	2020                	fld	fs0,64(s0)
+    239c:	2020                	fld	fs0,64(s0)
+    239e:	2020                	fld	fs0,64(s0)
+    23a0:	2e20                	fld	fs0,88(a2)
+    23a2:	4d2e                	lw	s10,200(sp)
+    23a4:	4d4d                	li	s10,19
+    23a6:	4d4d                	li	s10,19
+    23a8:	4d4d                	li	s10,19
+    23aa:	4d4d                	li	s10,19
+    23ac:	4d4d                	li	s10,19
+    23ae:	4d4d                	li	s10,19
+    23b0:	4d4d                	li	s10,19
+    23b2:	4e4d                	li	t3,19
+    23b4:	2e20                	fld	fs0,88(a2)
+    23b6:	2020                	fld	fs0,64(s0)
+    23b8:	202e                	fld	ft0,200(sp)
+    23ba:	4d4d4d4f          	0x4d4d4d4f
+    23be:	4d4d                	li	s10,19
+    23c0:	4d4d                	li	s10,19
+    23c2:	4d4d                	li	s10,19
+    23c4:	0a4d                	addi	s4,s4,19
+    23c6:	2020                	fld	fs0,64(s0)
+    23c8:	2020                	fld	fs0,64(s0)
+    23ca:	444d                	li	s0,19
+    23cc:	2020                	fld	fs0,64(s0)
+    23ce:	2020                	fld	fs0,64(s0)
+    23d0:	2020                	fld	fs0,64(s0)
+    23d2:	2020                	fld	fs0,64(s0)
+    23d4:	2020                	fld	fs0,64(s0)
+    23d6:	2020                	fld	fs0,64(s0)
+    23d8:	2020                	fld	fs0,64(s0)
+    23da:	2020                	fld	fs0,64(s0)
+    23dc:	2020                	fld	fs0,64(s0)
+    23de:	2e20                	fld	fs0,88(a2)
+    23e0:	4d4d                	li	s10,19
+    23e2:	4d4d                	li	s10,19
+    23e4:	4d4d                	li	s10,19
+    23e6:	4d4d                	li	s10,19
+    23e8:	4d4d                	li	s10,19
+    23ea:	4d4d                	li	s10,19
+    23ec:	4d4d                	li	s10,19
+    23ee:	2038                	fld	fa4,64(s0)
+    23f0:	2e20                	fld	fs0,88(a2)
+    23f2:	2020                	fld	fs0,64(s0)
+    23f4:	4e2e                	lw	t3,200(sp)
+    23f6:	4d4d                	li	s10,19
+    23f8:	4d4d                	li	s10,19
+    23fa:	4d4d                	li	s10,19
+    23fc:	4d4d                	li	s10,19
+    23fe:	4d4d                	li	s10,19
+    2400:	4d4d                	li	s10,19
+    2402:	4d4d                	li	s10,19
+    2404:	200a                	fld	ft0,128(sp)
+    2406:	2020                	fld	fs0,64(s0)
+    2408:	4d20                	lw	s0,88(a0)
+    240a:	2044                	fld	fs1,128(s0)
+    240c:	2020                	fld	fs0,64(s0)
+    240e:	2020                	fld	fs0,64(s0)
+    2410:	2020                	fld	fs0,64(s0)
+    2412:	2020                	fld	fs0,64(s0)
+    2414:	2020                	fld	fs0,64(s0)
+    2416:	2020                	fld	fs0,64(s0)
+    2418:	2020                	fld	fs0,64(s0)
+    241a:	2020                	fld	fs0,64(s0)
+    241c:	2020                	fld	fs0,64(s0)
+    241e:	4d2e                	lw	s10,200(sp)
+    2420:	4d4d                	li	s10,19
+    2422:	4d4d                	li	s10,19
+    2424:	4d4d                	li	s10,19
+    2426:	4d4d                	li	s10,19
+    2428:	2e4d                	jal	27da <exit+0x70a>
+    242a:	2e20                	fld	fs0,88(a2)
+    242c:	2020                	fld	fs0,64(s0)
+    242e:	2b20                	fld	fs0,80(a4)
+    2430:	4d4d                	li	s10,19
+    2432:	4d4d                	li	s10,19
+    2434:	4d4d                	li	s10,19
+    2436:	4d4d                	li	s10,19
+    2438:	4d4d                	li	s10,19
+    243a:	4d4d                	li	s10,19
+    243c:	4d4d                	li	s10,19
+    243e:	4d4d                	li	s10,19
+    2440:	2e7e                	fld	ft8,472(sp)
+    2442:	0a2e                	slli	s4,s4,0xb
+    2444:	2020                	fld	fs0,64(s0)
+    2446:	2020                	fld	fs0,64(s0)
+    2448:	444d                	li	s0,19
+    244a:	2020                	fld	fs0,64(s0)
+    244c:	2020                	fld	fs0,64(s0)
+    244e:	2020                	fld	fs0,64(s0)
+    2450:	2020                	fld	fs0,64(s0)
+    2452:	2020                	fld	fs0,64(s0)
+    2454:	2020                	fld	fs0,64(s0)
+    2456:	2020                	fld	fs0,64(s0)
+    2458:	2020                	fld	fs0,64(s0)
+    245a:	2020                	fld	fs0,64(s0)
+    245c:	2e20                	fld	fs0,88(a2)
+    245e:	4d4d                	li	s10,19
+    2460:	4d4d                	li	s10,19
+    2462:	494d                	li	s2,19
+    2464:	202e                	fld	ft0,200(sp)
+    2466:	2e20                	fld	fs0,88(a2)
+    2468:	202e                	fld	ft0,200(sp)
+    246a:	4d4d                	li	s10,19
+    246c:	4d4d                	li	s10,19
+    246e:	4d4d                	li	s10,19
+    2470:	4d4d                	li	s10,19
+    2472:	4d4d                	li	s10,19
+    2474:	4d4d                	li	s10,19
+    2476:	4d4d                	li	s10,19
+    2478:	4d4d                	li	s10,19
+    247a:	2038                	fld	fa4,64(s0)
+    247c:	2e2e                	fld	ft8,200(sp)
+    247e:	2c2e                	fld	fs8,200(sp)
+    2480:	4d4d                	li	s10,19
+    2482:	200a                	fld	ft0,128(sp)
+    2484:	2020                	fld	fs0,64(s0)
+    2486:	4d20                	lw	s0,88(a0)
+    2488:	2044                	fld	fs1,128(s0)
+    248a:	2020                	fld	fs0,64(s0)
+    248c:	2020                	fld	fs0,64(s0)
+    248e:	2020                	fld	fs0,64(s0)
+    2490:	2020                	fld	fs0,64(s0)
+    2492:	2020                	fld	fs0,64(s0)
+    2494:	2020                	fld	fs0,64(s0)
+    2496:	2020                	fld	fs0,64(s0)
+    2498:	2020                	fld	fs0,64(s0)
+    249a:	2020                	fld	fs0,64(s0)
+    249c:	4d2e                	lw	s10,200(sp)
+    249e:	2e2e                	fld	ft8,200(sp)
+    24a0:	2e20                	fld	fs0,88(a2)
+    24a2:	2020                	fld	fs0,64(s0)
+    24a4:	4d4d4d3f 4d4d4d4d 	0x4d4d4d4d4d4d4d3f
+    24ac:	4d4d                	li	s10,19
+    24ae:	4d4d                	li	s10,19
+    24b0:	4d4d                	li	s10,19
+    24b2:	4d4d                	li	s10,19
+    24b4:	2e4d                	jal	2866 <exit+0x796>
+    24b6:	2e2e                	fld	ft8,200(sp)
+    24b8:	2e2e                	fld	ft8,200(sp)
+    24ba:	4d44                	lw	s1,28(a0)
+    24bc:	4d4d                	li	s10,19
+    24be:	4d4d                	li	s10,19
+    24c0:	0a4d                	addi	s4,s4,19
+    24c2:	2020                	fld	fs0,64(s0)
+    24c4:	2020                	fld	fs0,64(s0)
+    24c6:	444d                	li	s0,19
+    24c8:	2020                	fld	fs0,64(s0)
+    24ca:	2020                	fld	fs0,64(s0)
+    24cc:	2020                	fld	fs0,64(s0)
+    24ce:	2020                	fld	fs0,64(s0)
+    24d0:	2020                	fld	fs0,64(s0)
+    24d2:	2020                	fld	fs0,64(s0)
+    24d4:	2020                	fld	fs0,64(s0)
+    24d6:	2020                	fld	fs0,64(s0)
+    24d8:	2020                	fld	fs0,64(s0)
+    24da:	2020                	fld	fs0,64(s0)
+    24dc:	2020                	fld	fs0,64(s0)
+    24de:	2420                	fld	fs0,72(s0)
+    24e0:	4d4d                	li	s10,19
+    24e2:	4d4d                	li	s10,19
+    24e4:	4d4d                	li	s10,19
+    24e6:	4d4d                	li	s10,19
+    24e8:	4d4d                	li	s10,19
+    24ea:	4d4d                	li	s10,19
+    24ec:	4d4d                	li	s10,19
+    24ee:	4d4d                	li	s10,19
+    24f0:	2e2e                	fld	ft8,200(sp)
+    24f2:	2e20                	fld	fs0,88(a2)
+    24f4:	4d20                	lw	s0,88(a0)
+    24f6:	4d4d                	li	s10,19
+    24f8:	4d4d                	li	s10,19
+    24fa:	4d4d                	li	s10,19
+    24fc:	4d4d                	li	s10,19
+    24fe:	4d4d                	li	s10,19
+    2500:	200a                	fld	ft0,128(sp)
+    2502:	2020                	fld	fs0,64(s0)
+    2504:	4d20                	lw	s0,88(a0)
+    2506:	2044                	fld	fs1,128(s0)
+    2508:	2020                	fld	fs0,64(s0)
+    250a:	2020                	fld	fs0,64(s0)
+    250c:	2020                	fld	fs0,64(s0)
+    250e:	2020                	fld	fs0,64(s0)
+    2510:	2020                	fld	fs0,64(s0)
+    2512:	2020                	fld	fs0,64(s0)
+    2514:	2020                	fld	fs0,64(s0)
+    2516:	2020                	fld	fs0,64(s0)
+    2518:	2020                	fld	fs0,64(s0)
+    251a:	4d2e                	lw	s10,200(sp)
+    251c:	4d4d                	li	s10,19
+    251e:	4d4d                	li	s10,19
+    2520:	4d4d                	li	s10,19
+    2522:	4d4d                	li	s10,19
+    2524:	4d4d                	li	s10,19
+    2526:	4d4d                	li	s10,19
+    2528:	4d4d                	li	s10,19
+    252a:	2e49                	jal	28bc <exit+0x7ec>
+    252c:	2e20                	fld	fs0,88(a2)
+    252e:	372e                	fld	fa4,232(sp)
+    2530:	4d4d                	li	s10,19
+    2532:	4d4d                	li	s10,19
+    2534:	4d4d                	li	s10,19
+    2536:	4d4d                	li	s10,19
+    2538:	4d4d                	li	s10,19
+    253a:	4d4d                	li	s10,19
+    253c:	4d4d                	li	s10,19
+    253e:	0a4d                	addi	s4,s4,19
+    2540:	2020                	fld	fs0,64(s0)
+    2542:	2020                	fld	fs0,64(s0)
+    2544:	444d                	li	s0,19
+    2546:	2020                	fld	fs0,64(s0)
+    2548:	2020                	fld	fs0,64(s0)
+    254a:	2020                	fld	fs0,64(s0)
+    254c:	2020                	fld	fs0,64(s0)
+    254e:	2020                	fld	fs0,64(s0)
+    2550:	2020                	fld	fs0,64(s0)
+    2552:	2020                	fld	fs0,64(s0)
+    2554:	2020                	fld	fs0,64(s0)
+    2556:	2020                	fld	fs0,64(s0)
+    2558:	2e20                	fld	fs0,88(a2)
+    255a:	4d4d                	li	s10,19
+    255c:	4d4d                	li	s10,19
+    255e:	4d4d                	li	s10,19
+    2560:	4d4d                	li	s10,19
+    2562:	4d4d                	li	s10,19
+    2564:	204d                	jal	2606 <exit+0x536>
+    2566:	2020                	fld	fs0,64(s0)
+    2568:	202e                	fld	ft0,200(sp)
+    256a:	4d4d                	li	s10,19
+    256c:	4d4d                	li	s10,19
+    256e:	4d4d                	li	s10,19
+    2570:	4d4d                	li	s10,19
+    2572:	4d4d                	li	s10,19
+    2574:	4d4d                	li	s10,19
+    2576:	4d4d                	li	s10,19
+    2578:	4d4d                	li	s10,19
+    257a:	200a                	fld	ft0,128(sp)
+    257c:	2020                	fld	fs0,64(s0)
+    257e:	4d20                	lw	s0,88(a0)
+    2580:	2044                	fld	fs1,128(s0)
+    2582:	2020                	fld	fs0,64(s0)
+    2584:	2020                	fld	fs0,64(s0)
+    2586:	2020                	fld	fs0,64(s0)
+    2588:	2020                	fld	fs0,64(s0)
+    258a:	2020                	fld	fs0,64(s0)
+    258c:	2020                	fld	fs0,64(s0)
+    258e:	2020                	fld	fs0,64(s0)
+    2590:	2020                	fld	fs0,64(s0)
+    2592:	2020                	fld	fs0,64(s0)
+    2594:	4d2e                	lw	s10,200(sp)
+    2596:	4d4d                	li	s10,19
+    2598:	4d4d                	li	s10,19
+    259a:	7e4d                	lui	t3,0xffff3
+    259c:	2e20                	fld	fs0,88(a2)
+    259e:	2020                	fld	fs0,64(s0)
+    25a0:	4d24                	lw	s1,88(a0)
+    25a2:	4d4d                	li	s10,19
+    25a4:	4d4d                	li	s10,19
+    25a6:	4d4d                	li	s10,19
+    25a8:	4d4d                	li	s10,19
+    25aa:	4d4d                	li	s10,19
+    25ac:	4d4d                	li	s10,19
+    25ae:	4d4d                	li	s10,19
+    25b0:	0a4d                	addi	s4,s4,19
+    25b2:	2020                	fld	fs0,64(s0)
+    25b4:	2020                	fld	fs0,64(s0)
+    25b6:	444d                	li	s0,19
+    25b8:	2020                	fld	fs0,64(s0)
+    25ba:	2020                	fld	fs0,64(s0)
+    25bc:	2020                	fld	fs0,64(s0)
+    25be:	2020                	fld	fs0,64(s0)
+    25c0:	2020                	fld	fs0,64(s0)
+    25c2:	2020                	fld	fs0,64(s0)
+    25c4:	2020                	fld	fs0,64(s0)
+    25c6:	2020                	fld	fs0,64(s0)
+    25c8:	2020                	fld	fs0,64(s0)
+    25ca:	2e20                	fld	fs0,88(a2)
+    25cc:	4d4d                	li	s10,19
+    25ce:	2e2c                	fld	fa1,88(a2)
+    25d0:	2e20                	fld	fs0,88(a2)
+    25d2:	382e                	fld	fa6,232(sp)
+    25d4:	4d4d                	li	s10,19
+    25d6:	4d4d                	li	s10,19
+    25d8:	4d4d                	li	s10,19
+    25da:	4d4d                	li	s10,19
+    25dc:	4d4d                	li	s10,19
+    25de:	4d4d                	li	s10,19
+    25e0:	4d4d                	li	s10,19
+    25e2:	4d4d                	li	s10,19
+    25e4:	200a                	fld	ft0,128(sp)
+    25e6:	2020                	fld	fs0,64(s0)
+    25e8:	4d20                	lw	s0,88(a0)
+    25ea:	2044                	fld	fs1,128(s0)
+    25ec:	2020                	fld	fs0,64(s0)
+    25ee:	2020                	fld	fs0,64(s0)
+    25f0:	2020                	fld	fs0,64(s0)
+    25f2:	2020                	fld	fs0,64(s0)
+    25f4:	2020                	fld	fs0,64(s0)
+    25f6:	2020                	fld	fs0,64(s0)
+    25f8:	2020                	fld	fs0,64(s0)
+    25fa:	2020                	fld	fs0,64(s0)
+    25fc:	2020                	fld	fs0,64(s0)
+    25fe:	2e20                	fld	fs0,88(a2)
+    2600:	3a2e                	fld	fs4,232(sp)
+    2602:	4d4d                	li	s10,19
+    2604:	4d4d                	li	s10,19
+    2606:	4d4d                	li	s10,19
+    2608:	4d4d                	li	s10,19
+    260a:	4d4d                	li	s10,19
+    260c:	4d4d                	li	s10,19
+    260e:	4d4d                	li	s10,19
+    2610:	4d4d                	li	s10,19
+    2612:	20200a3f 4d4d2020 	0x4d4d202020200a3f
+    261a:	2020                	fld	fs0,64(s0)
+    261c:	2020                	fld	fs0,64(s0)
+    261e:	2020                	fld	fs0,64(s0)
+    2620:	2020                	fld	fs0,64(s0)
+    2622:	2020                	fld	fs0,64(s0)
+    2624:	2020                	fld	fs0,64(s0)
+    2626:	2020                	fld	fs0,64(s0)
+    2628:	2020                	fld	fs0,64(s0)
+    262a:	2020                	fld	fs0,64(s0)
+    262c:	2e20                	fld	fs0,88(a2)
+    262e:	4d4d                	li	s10,19
+    2630:	4d4d                	li	s10,19
+    2632:	4d4d                	li	s10,19
+    2634:	4d4d                	li	s10,19
+    2636:	4d4d                	li	s10,19
+    2638:	4d4d                	li	s10,19
+    263a:	4d4d                	li	s10,19
+    263c:	0a4e                	slli	s4,s4,0x13
+    263e:	2020                	fld	fs0,64(s0)
+    2640:	2020                	fld	fs0,64(s0)
+    2642:	4d20                	lw	s0,88(a0)
+    2644:	204d                	jal	26e6 <exit+0x616>
+    2646:	2020                	fld	fs0,64(s0)
+    2648:	2020                	fld	fs0,64(s0)
+    264a:	2020                	fld	fs0,64(s0)
+    264c:	2020                	fld	fs0,64(s0)
+    264e:	2020                	fld	fs0,64(s0)
+    2650:	2020                	fld	fs0,64(s0)
+    2652:	2020                	fld	fs0,64(s0)
+    2654:	2020                	fld	fs0,64(s0)
+    2656:	2e20                	fld	fs0,88(a2)
+    2658:	4d4d                	li	s10,19
+    265a:	4d4d                	li	s10,19
+    265c:	4d4d                	li	s10,19
+    265e:	4d4d                	li	s10,19
+    2660:	4d4d                	li	s10,19
+    2662:	200a                	fld	ft0,128(sp)
+    2664:	2020                	fld	fs0,64(s0)
+    2666:	2020                	fld	fs0,64(s0)
+    2668:	2e20                	fld	fs0,88(a2)
+    266a:	4d4d                	li	s10,19
+    266c:	3d4d                	jal	251e <exit+0x44e>
+    266e:	2e2e                	fld	ft8,200(sp)
+    2670:	2020                	fld	fs0,64(s0)
+    2672:	2020                	fld	fs0,64(s0)
+    2674:	2020                	fld	fs0,64(s0)
+    2676:	2020                	fld	fs0,64(s0)
+    2678:	2020                	fld	fs0,64(s0)
+    267a:	2020                	fld	fs0,64(s0)
+    267c:	4d2e                	lw	s10,200(sp)
+    267e:	4d4d                	li	s10,19
+    2680:	4d4d                	li	s10,19
+    2682:	0a4d                	addi	s4,s4,19
+    2684:	2020                	fld	fs0,64(s0)
+    2686:	2020                	fld	fs0,64(s0)
+    2688:	2020                	fld	fs0,64(s0)
+    268a:	2020                	fld	fs0,64(s0)
+    268c:	2020                	fld	fs0,64(s0)
+    268e:	4d373727          	fsd	fs3,1230(a4)
+    2692:	4d4d                	li	s10,19
+    2694:	4d4d                	li	s10,19
+    2696:	4d4d                	li	s10,19
+    2698:	4d4d                	li	s10,19
+    269a:	4d4d                	li	s10,19
+    269c:	4d4d                	li	s10,19
+    269e:	374d                	jal	2640 <exit+0x570>
+    26a0:	000a                	c.slli	zero,0x2
+
+Disassembly of section .sdata:
+
+00003000 <PUT_ADDR>:
+    3000:	fff0                	fsw	fa2,124(a5)
+    3002:	f000                	fsw	fs0,32(s0)
+
+00003004 <GET_ADDR>:
+    3004:	fff4                	fsw	fa3,124(a5)
+    3006:	f000                	fsw	fs0,32(s0)
+
+00003008 <FINISH_ADDR>:
+    3008:	fff8                	fsw	fa4,124(a5)
+    300a:	f000                	fsw	fs0,32(s0)
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
+   4:	2820                	fld	fs0,80(s0)
+   6:	2029                	jal	10 <_start+0x10>
+   8:	3031                	jal	fffff814 <_end+0xffffc808>
+   a:	322e                	fld	ft4,232(sp)
+   c:	302e                	fld	ft0,232(sp)
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	1b41                	addi	s6,s6,-16
+   2:	0000                	unimp
+   4:	7200                	flw	fs0,32(a2)
+   6:	7369                	lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <_start+0x14>
+   c:	0011                	c.nop	4
+   e:	0000                	unimp
+  10:	1004                	addi	s1,sp,32
+  12:	7205                	lui	tp,0xfffe1
+  14:	3376                	fld	ft6,376(sp)
+  16:	6932                	flw	fs2,12(sp)
+  18:	7032                	flw	ft0,44(sp)
+  1a:	0030                	addi	a2,sp,8

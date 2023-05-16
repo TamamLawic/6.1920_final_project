@@ -26,7 +26,7 @@ module mktop_pipelined(Empty);
     endrule
 
     rule requestI;
-        let req <- rv_core.getIReqRed;
+        let req <- rv_core.getIReq;
         if (debug) $display("Get IReq", fshow(req));
         ireq <= req;
         Bit#(1) write = req.byte_en == 0? 0: 1;
@@ -61,7 +61,7 @@ module mktop_pipelined(Empty);
         let req = ireq;
         if (debug) $display("Get IResp ", fshow(req), fshow(x));
         req.data = x;
-            rv_core.getIRespRed(req);
+            rv_core.getIResp(req);
     endrule
 
     rule requestD;

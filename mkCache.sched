@@ -1,0 +1,391 @@
+=== Generated schedule for mkCache ===
+
+Method schedule
+---------------
+Method: putFromProc
+Ready signal: (mshr == 3'd0) &&
+	      stBuf.i_notFull &&
+	      ((! stBuf.notEmpty) || stBuf.i_notEmpty) &&
+	      hitQ.i_notFull && (dataBRAM_serverAdapter_cnt .< 3'd3)
+Conflict-free: getToProc, getToMem, putFromMem
+Conflicts: putFromProc
+ 
+Method: getToProc
+Ready signal: hitQ.i_notEmpty
+Conflict-free: putFromProc, getToMem, putFromMem
+Conflicts: getToProc
+ 
+Method: getToMem
+Ready signal: toMemQ.i_notEmpty
+Conflict-free: putFromProc, getToProc, putFromMem
+Conflicts: getToMem
+ 
+Method: putFromMem
+Ready signal: fromMemQ.i_notFull
+Conflict-free: putFromProc, getToProc, getToMem
+Conflicts: putFromMem
+ 
+Rule schedule
+-------------
+Rule: dataBRAM_serverAdapter_outData_enqueue
+Predicate: dataBRAM_serverAdapter_outData_enqw.whas &&
+	   ((! dataBRAM_serverAdapter_outData_dequeueing.whas) ||
+	    dataBRAM_serverAdapter_outData_ff.i_notEmpty)
+Blocking rules: (none)
+ 
+Rule: dataBRAM_serverAdapter_outData_dequeue
+Predicate: dataBRAM_serverAdapter_outData_dequeueing.whas &&
+	   dataBRAM_serverAdapter_outData_ff.i_notEmpty
+Blocking rules: (none)
+ 
+Rule: dataBRAM_serverAdapter_cnt_finalAdd
+Predicate: dataBRAM_serverAdapter_cnt_1.whas ||
+	   dataBRAM_serverAdapter_cnt_2.whas ||
+	   dataBRAM_serverAdapter_cnt_3.whas
+Blocking rules: (none)
+ 
+Rule: dataBRAM_serverAdapter_s1__dreg_update
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: dataBRAM_serverAdapter_stageReadResponseAlways
+Predicate: dataBRAM_serverAdapter_writeWithResp.whas
+Blocking rules: (none)
+ 
+Rule: dataBRAM_serverAdapter_moveToOutFIFO
+Predicate: ((! dataBRAM_serverAdapter_s1[0]) ||
+	    dataBRAM_serverAdapter_outData_ff.i_notFull) &&
+	   dataBRAM_serverAdapter_s1[1]
+Blocking rules: (none)
+ 
+Rule: dataBRAM_serverAdapter_overRun
+Predicate: dataBRAM_serverAdapter_s1[1] &&
+	   ((! dataBRAM_serverAdapter_outData_beforeEnq.read) ||
+	    (! dataBRAM_serverAdapter_outData_beforeDeq.read) ||
+	    (! dataBRAM_serverAdapter_outData_ff.i_notFull))
+Blocking rules: (none)
+ 
+Rule: lockL1_canonicalize
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: clearLockL1
+Predicate: True
+Blocking rules: (none)
+ 
+Rule: processStoreBuf
+Predicate: stBuf.i_notEmpty && (dataBRAM_serverAdapter_cnt .< 3'd3) &&
+	   (mshr == 3'd0) &&
+	   (lockL1_readBeforeLaterWrites_1.read
+	    ? lockL1_port_0.whas
+	      ? ! lockL1_port_0.wget
+	      : (! lockL1_register)
+	    : (_ :: Bit 1))
+Blocking rules: putFromProc
+ 
+Rule: startHit
+Predicate: dataBRAM_serverAdapter_outData_beforeDeq.read &&
+	   (dataBRAM_serverAdapter_outData_ff.i_notEmpty ||
+	    dataBRAM_serverAdapter_outData_enqw.whas) &&
+	   (missReq[64]
+	    ? dataBRAM_serverAdapter_cnt .< 3'd3
+	    : hitQ.i_notFull) &&
+	   (mshr == 3'd1)
+Blocking rules: (none)
+ 
+Rule: startMiss
+Predicate: (dataBRAM_serverAdapter_outData_ff.i_notEmpty ||
+	    dataBRAM_serverAdapter_outData_enqw.whas) &&
+	   ((! (PrimArrayDynSelect (PrimBuildArray valids_0
+						   valids_1
+						   valids_2
+						   valids_3
+						   valids_4
+						   valids_5
+						   valids_6
+						   valids_7
+						   valids_8
+						   valids_9
+						   valids_10
+						   valids_11
+						   valids_12
+						   valids_13
+						   valids_14
+						   valids_15
+						   valids_16
+						   valids_17
+						   valids_18
+						   valids_19
+						   valids_20
+						   valids_21
+						   valids_22
+						   valids_23
+						   valids_24
+						   valids_25
+						   valids_26
+						   valids_27
+						   valids_28
+						   valids_29
+						   valids_30
+						   valids_31
+						   valids_32
+						   valids_33
+						   valids_34
+						   valids_35
+						   valids_36
+						   valids_37
+						   valids_38
+						   valids_39
+						   valids_40
+						   valids_41
+						   valids_42
+						   valids_43
+						   valids_44
+						   valids_45
+						   valids_46
+						   valids_47
+						   valids_48
+						   valids_49
+						   valids_50
+						   valids_51
+						   valids_52
+						   valids_53
+						   valids_54
+						   valids_55
+						   valids_56
+						   valids_57
+						   valids_58
+						   valids_59
+						   valids_60
+						   valids_61
+						   valids_62
+						   valids_63
+						   valids_64
+						   valids_65
+						   valids_66
+						   valids_67
+						   valids_68
+						   valids_69
+						   valids_70
+						   valids_71
+						   valids_72
+						   valids_73
+						   valids_74
+						   valids_75
+						   valids_76
+						   valids_77
+						   valids_78
+						   valids_79
+						   valids_80
+						   valids_81
+						   valids_82
+						   valids_83
+						   valids_84
+						   valids_85
+						   valids_86
+						   valids_87
+						   valids_88
+						   valids_89
+						   valids_90
+						   valids_91
+						   valids_92
+						   valids_93
+						   valids_94
+						   valids_95
+						   valids_96
+						   valids_97
+						   valids_98
+						   valids_99
+						   valids_100
+						   valids_101
+						   valids_102
+						   valids_103
+						   valids_104
+						   valids_105
+						   valids_106
+						   valids_107
+						   valids_108
+						   valids_109
+						   valids_110
+						   valids_111
+						   valids_112
+						   valids_113
+						   valids_114
+						   valids_115
+						   valids_116
+						   valids_117
+						   valids_118
+						   valids_119
+						   valids_120
+						   valids_121
+						   valids_122
+						   valids_123
+						   valids_124
+						   valids_125
+						   valids_126
+						   valids_127)
+				   missReq[44:38])) ||
+	    (! (PrimArrayDynSelect (PrimBuildArray dirtys_0
+						   dirtys_1
+						   dirtys_2
+						   dirtys_3
+						   dirtys_4
+						   dirtys_5
+						   dirtys_6
+						   dirtys_7
+						   dirtys_8
+						   dirtys_9
+						   dirtys_10
+						   dirtys_11
+						   dirtys_12
+						   dirtys_13
+						   dirtys_14
+						   dirtys_15
+						   dirtys_16
+						   dirtys_17
+						   dirtys_18
+						   dirtys_19
+						   dirtys_20
+						   dirtys_21
+						   dirtys_22
+						   dirtys_23
+						   dirtys_24
+						   dirtys_25
+						   dirtys_26
+						   dirtys_27
+						   dirtys_28
+						   dirtys_29
+						   dirtys_30
+						   dirtys_31
+						   dirtys_32
+						   dirtys_33
+						   dirtys_34
+						   dirtys_35
+						   dirtys_36
+						   dirtys_37
+						   dirtys_38
+						   dirtys_39
+						   dirtys_40
+						   dirtys_41
+						   dirtys_42
+						   dirtys_43
+						   dirtys_44
+						   dirtys_45
+						   dirtys_46
+						   dirtys_47
+						   dirtys_48
+						   dirtys_49
+						   dirtys_50
+						   dirtys_51
+						   dirtys_52
+						   dirtys_53
+						   dirtys_54
+						   dirtys_55
+						   dirtys_56
+						   dirtys_57
+						   dirtys_58
+						   dirtys_59
+						   dirtys_60
+						   dirtys_61
+						   dirtys_62
+						   dirtys_63
+						   dirtys_64
+						   dirtys_65
+						   dirtys_66
+						   dirtys_67
+						   dirtys_68
+						   dirtys_69
+						   dirtys_70
+						   dirtys_71
+						   dirtys_72
+						   dirtys_73
+						   dirtys_74
+						   dirtys_75
+						   dirtys_76
+						   dirtys_77
+						   dirtys_78
+						   dirtys_79
+						   dirtys_80
+						   dirtys_81
+						   dirtys_82
+						   dirtys_83
+						   dirtys_84
+						   dirtys_85
+						   dirtys_86
+						   dirtys_87
+						   dirtys_88
+						   dirtys_89
+						   dirtys_90
+						   dirtys_91
+						   dirtys_92
+						   dirtys_93
+						   dirtys_94
+						   dirtys_95
+						   dirtys_96
+						   dirtys_97
+						   dirtys_98
+						   dirtys_99
+						   dirtys_100
+						   dirtys_101
+						   dirtys_102
+						   dirtys_103
+						   dirtys_104
+						   dirtys_105
+						   dirtys_106
+						   dirtys_107
+						   dirtys_108
+						   dirtys_109
+						   dirtys_110
+						   dirtys_111
+						   dirtys_112
+						   dirtys_113
+						   dirtys_114
+						   dirtys_115
+						   dirtys_116
+						   dirtys_117
+						   dirtys_118
+						   dirtys_119
+						   dirtys_120
+						   dirtys_121
+						   dirtys_122
+						   dirtys_123
+						   dirtys_124
+						   dirtys_125
+						   dirtys_126
+						   dirtys_127)
+				   missReq[44:38])) ||
+	    (dataBRAM_serverAdapter_outData_beforeDeq.read &&
+	     toMemQ.i_notFull)) &&
+	   (mshr == 3'd2)
+Blocking rules: (none)
+ 
+Rule: sendFillReq
+Predicate: toMemQ.i_notFull && (mshr == 3'd3)
+Blocking rules: (none)
+ 
+Rule: waitFillResp
+Predicate: (dataBRAM_serverAdapter_cnt .< 3'd3) &&
+	   fromMemQ.i_notEmpty && (missReq[64] || hitQ.i_notFull) &&
+	   (mshr == 3'd4)
+Blocking rules: (none)
+ 
+Logical execution order: putFromProc,
+			 getToProc,
+			 getToMem,
+			 putFromMem,
+			 processStoreBuf,
+			 clearLockL1,
+			 sendFillReq,
+			 waitFillResp,
+			 dataBRAM_serverAdapter_overRun,
+			 dataBRAM_serverAdapter_moveToOutFIFO,
+			 startHit,
+			 startMiss,
+			 dataBRAM_serverAdapter_stageReadResponseAlways,
+			 dataBRAM_serverAdapter_outData_enqueue,
+			 dataBRAM_serverAdapter_outData_dequeue,
+			 dataBRAM_serverAdapter_cnt_finalAdd,
+			 dataBRAM_serverAdapter_s1__dreg_update,
+			 lockL1_canonicalize
+
+=======================================

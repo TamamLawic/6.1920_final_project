@@ -1,0 +1,400 @@
+Warning: file 'memlines.vmh' for memory 'bram_memory' has a gap at addresses 67 to 127.
+Warning: file 'memlines.vmh' for memory 'bram_memory' has a gap at addresses 129 to 67108863.
+Fetch Red 00000000
+ENQUE RED
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000093 }
+[Decode Red scoreboard : ]  1'h0
+Use Register 01
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000093 }
+Fetch Red 00000004
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000093 }
+[Writeback scoreboard : ]  1'h1
+Free Writeback Register 01
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000113 }
+[Decode Red scoreboard : ]  2'h0
+Use Register 02
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000113 }
+Fetch Red 00000008
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000113 }
+[Writeback scoreboard : ]  2'h1
+Free Writeback Register 02
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000193 }
+[Decode Red scoreboard : ]  3'h0
+Use Register 03
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000193 }
+Fetch Red 0000000c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000193 }
+[Writeback scoreboard : ]  3'h1
+Free Writeback Register 03
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000213 }
+[Decode Red scoreboard : ]  4'h0
+Use Register 04
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000213 }
+Fetch Red 00000010
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000213 }
+[Writeback scoreboard : ]  4'h1
+Free Writeback Register 04
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000293 }
+[Decode Red scoreboard : ]  5'h0
+Use Register 05
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000293 }
+Fetch Red 00000014
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000293 }
+[Writeback scoreboard : ]  5'h1
+Free Writeback Register 05
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000313 }
+[Decode Red scoreboard : ]  6'h0
+Use Register 06
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000313 }
+Fetch Red 00000018
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000313 }
+[Writeback scoreboard : ]  6'h1
+Free Writeback Register 06
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000393 }
+[Decode Red scoreboard : ]  7'h0
+Use Register 07
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000393 }
+Fetch Red 0000001c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000393 }
+[Writeback scoreboard : ]  7'h1
+Free Writeback Register 07
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000413 }
+[Decode Red scoreboard : ]  8'h0
+Use Register 08
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000413 }
+Fetch Red 00000020
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000413 }
+[Writeback scoreboard : ]  8'h1
+Free Writeback Register 08
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000493 }
+[Decode Red scoreboard : ]  9'h0
+Use Register 09
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000493 }
+Fetch Red 00000024
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000493 }
+[Writeback scoreboard : ]  9'h1
+Free Writeback Register 09
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000513 }
+[Decode Red scoreboard : ] 10'h0
+Use Register 0a
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000513 }
+Fetch Red 00000028
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000513 }
+[Writeback scoreboard : ] 10'h1
+Free Writeback Register 0a
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000593 }
+[Decode Red scoreboard : ] 11'h0
+Use Register 0b
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000593 }
+Fetch Red 0000002c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000593 }
+[Writeback scoreboard : ] 11'h1
+Free Writeback Register 0b
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000613 }
+[Decode Red scoreboard : ] 12'h0
+Use Register 0c
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000613 }
+Fetch Red 00000030
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000613 }
+[Writeback scoreboard : ] 12'h1
+Free Writeback Register 0c
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000693 }
+[Decode Red scoreboard : ] 13'h0
+Use Register 0d
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000693 }
+Fetch Red 00000034
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000693 }
+[Writeback scoreboard : ] 13'h1
+Free Writeback Register 0d
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000713 }
+[Decode Red scoreboard : ] 14'h0
+Use Register 0e
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000713 }
+Fetch Red 00000038
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000713 }
+[Writeback scoreboard : ] 14'h1
+Free Writeback Register 0e
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000793 }
+[Decode Red scoreboard : ] 15'h0
+Use Register 0f
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000793 }
+Fetch Red 0000003c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000793 }
+[Writeback scoreboard : ] 15'h1
+Free Writeback Register 0f
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000813 }
+[Decode Red scoreboard : ] 16'h0
+Use Register 10
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000813 }
+Fetch Red 00000040
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000813 }
+[Writeback scoreboard : ] 16'h1
+Free Writeback Register 10
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000893 }
+[Decode Red scoreboard : ] 17'h0
+Use Register 11
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000893 }
+Fetch Red 00000044
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000893 }
+[Writeback scoreboard : ] 17'h1
+Free Writeback Register 11
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000913 }
+[Decode Red scoreboard : ] 18'h0
+Use Register 12
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000913 }
+Fetch Red 00000048
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000913 }
+[Writeback scoreboard : ] 18'h1
+Free Writeback Register 12
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000993 }
+[Decode Red scoreboard : ] 19'h0
+Use Register 13
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000993 }
+Fetch Red 0000004c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000993 }
+[Writeback scoreboard : ] 19'h1
+Free Writeback Register 13
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000a13 }
+[Decode Red scoreboard : ] 20'h0
+Use Register 14
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000a13 }
+Fetch Red 00000050
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000a13 }
+[Writeback scoreboard : ] 20'h1
+Free Writeback Register 14
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000a93 }
+[Decode Red scoreboard : ] 21'h0
+Use Register 15
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000a93 }
+Fetch Red 00000054
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000a93 }
+[Writeback scoreboard : ] 21'h1
+Free Writeback Register 15
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000b13 }
+[Decode Red scoreboard : ] 22'h0
+Use Register 16
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000b13 }
+Fetch Red 00000058
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000b13 }
+[Writeback scoreboard : ] 22'h1
+Free Writeback Register 16
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000b93 }
+[Decode Red scoreboard : ] 23'h0
+Use Register 17
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000b93 }
+Fetch Red 0000005c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000b93 }
+[Writeback scoreboard : ] 23'h1
+Free Writeback Register 17
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000c13 }
+[Decode Red scoreboard : ] 24'h0
+Use Register 18
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000c13 }
+Fetch Red 00000060
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000c13 }
+[Writeback scoreboard : ] 24'h1
+Free Writeback Register 18
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000c93 }
+[Decode Red scoreboard : ] 25'h0
+Use Register 19
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000c93 }
+Fetch Red 00000064
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000c93 }
+[Writeback scoreboard : ] 25'h1
+Free Writeback Register 19
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000d13 }
+[Decode Red scoreboard : ] 26'h0
+Use Register 1a
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000d13 }
+Fetch Red 00000068
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000d13 }
+[Writeback scoreboard : ] 26'h1
+Free Writeback Register 1a
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000d93 }
+[Decode Red scoreboard : ] 27'h0
+Use Register 1b
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000d93 }
+Fetch Red 0000006c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000d93 }
+[Writeback scoreboard : ] 27'h1
+Free Writeback Register 1b
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000e13 }
+[Decode Red scoreboard : ] 28'h0
+Use Register 1c
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000e13 }
+Fetch Red 00000070
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000e13 }
+[Writeback scoreboard : ] 28'h1
+Free Writeback Register 1c
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000e93 }
+[Decode Red scoreboard : ] 29'h0
+Use Register 1d
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000e93 }
+Fetch Red 00000074
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000e93 }
+[Writeback scoreboard : ] 29'h1
+Free Writeback Register 1d
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000f13 }
+[Decode Red scoreboard : ] 30'h0
+Use Register 1e
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000f13 }
+Fetch Red 00000078
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000f13 }
+[Writeback scoreboard : ] 30'h1
+Free Writeback Register 1e
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000f93 }
+[Decode Red scoreboard : ] 31'h0
+Use Register 1f
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000f93 }
+Fetch Red 0000007c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000f93 }
+[Writeback scoreboard : ] 31'h1
+Free Writeback Register 1f
+[Decode] RedDecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmU, inst: 'h10000137 }
+[Decode Red scoreboard : ]  2'h0
+Use Register 02
+[Execute] DecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmU, inst: 'h10000137 }
+Fetch Red 00000080
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmU, inst: 'h10000137 }
+[Writeback scoreboard : ]  2'h1
+Free Writeback Register 02
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hff010113 }
+[Decode Red scoreboard : ]  2'h0
+Use Register 02
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hff010113 }
+Fetch Red 00000084
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hff010113 }
+[Writeback scoreboard : ]  2'h1
+Free Writeback Register 02
+[Decode] RedDecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmJ, inst: 'h018010ef }
+[Decode Red scoreboard : ]  1'h0
+Use Register 01
+[Execute] DecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmJ, inst: 'h018010ef }
+Redirect 0000109c
+Fetch Red 0000109c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmJ, inst: 'h018010ef }
+[Writeback scoreboard : ]  1'h1
+Free Writeback Register 01
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00b00513 }
+[Decode Red scoreboard : ] 10'h0
+Use Register 0a
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00b00513 }
+Fetch Red 000010a0
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00b00513 }
+[Writeback scoreboard : ] 10'h1
+Free Writeback Register 0a
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00008067 }
+Use Register 00
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00008067 }
+Redirect 00000088
+Fetch Red 00000088
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00008067 }
+Free Writeback Register 00
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000513 }
+[Decode Red scoreboard : ] 10'h0
+Use Register 0a
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000513 }
+Fetch Red 0000008c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h00000513 }
+[Writeback scoreboard : ] 10'h1
+Free Writeback Register 0a
+[Decode] RedDecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmJ, inst: 'h7d9000ef }
+[Decode Red scoreboard : ]  1'h0
+Use Register 01
+[Execute] DecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmJ, inst: 'h7d9000ef }
+Redirect 00001064
+Fetch Red 00001064
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmJ, inst: 'h7d9000ef }
+[Writeback scoreboard : ]  1'h1
+Free Writeback Register 01
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hfe010113 }
+[Decode Red scoreboard : ]  2'h0
+Use Register 02
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hfe010113 }
+Fetch Red 00001068
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hfe010113 }
+[Writeback scoreboard : ]  2'h1
+Free Writeback Register 02
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: True, valid_rd: False, immediateType: tagged Valid ImmS, inst: 'h00812e23 }
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: True, valid_rd: False, immediateType: tagged Valid ImmS, inst: 'h00812e23 }
+Fetch Red 0000106c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: True, valid_rd: False, immediateType: tagged Valid ImmS, inst: 'h00812e23 }
+Free Writeback Register 1c
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h02010413 }
+[Decode Red scoreboard : ]  8'h0
+Use Register 08
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h02010413 }
+Fetch Red 00001070
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h02010413 }
+[Writeback scoreboard : ]  8'h1
+Free Writeback Register 08
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: True, valid_rd: False, immediateType: tagged Valid ImmS, inst: 'hfea42623 }
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: True, valid_rd: False, immediateType: tagged Valid ImmS, inst: 'hfea42623 }
+Fetch Red 00001074
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: True, valid_rd: False, immediateType: tagged Valid ImmS, inst: 'hfea42623 }
+Free Writeback Register 0c
+[Decode] RedDecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmU, inst: 'h00001797 }
+[Decode Red scoreboard : ] 15'h0
+Use Register 0f
+[Execute] DecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmU, inst: 'h00001797 }
+Fetch Red 00001078
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: False, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmU, inst: 'h00001797 }
+[Writeback scoreboard : ] 15'h1
+Free Writeback Register 0f
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hf9478793 }
+[Decode Red scoreboard : ] 15'h0
+Use Register 0f
+[Execute] DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hf9478793 }
+Fetch Red 0000107c
+ENQUE RED
+[Writeback]DecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'hf9478793 }
+[Writeback scoreboard : ] 15'h1
+Free Writeback Register 0f
+[Decode] RedDecodedInst { legal: True, valid_rs1: True, valid_rs2: False, valid_rd: True, immediateType: tagged Valid ImmI, inst: 'h0007a783 }
+[Decode Red scoreboard : ] 15'h0
+Use Register 0f
+Fetch Red 00001080
+ENQUE RED
